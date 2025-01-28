@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}課題一覧{% endblock %}
+
+{% block content %}
+<h2>課題一覧</h2>
+<ul>
+    {% for task in tasks %}
+        <li>
+            <strong>{{ task.title }}</strong> - 締切: {{ task.due_date }} - 状況: {{ task.get_status_display }}
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
