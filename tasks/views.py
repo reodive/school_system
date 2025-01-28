@@ -4,6 +4,7 @@ from .forms import TaskSubmissionForm
 
 def submit_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
+    return render(request, 'tasks/submit.html', {'task': task})
     if request.method == 'POST':
         form = TaskSubmissionForm(request.POST, request.FILES, instance=task)
         if form.is_valid():

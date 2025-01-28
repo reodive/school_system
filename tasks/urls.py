@@ -1,9 +1,7 @@
-from django.contrib import admin
-from django.urls import path, include
-from django.views.generic import TemplateView
+from django.urls import path
+from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', TemplateView.as_view(template_name='index.html'), name='home'),
-    path('tasks/', include('tasks.urls')),  # `tasks` のURLを読み込む
+    path('', views.task_list, name='task_list'),  # 課題一覧ページ
+    path('<int:task_id>/submit/', views.submit_task, name='submit_task'),  # 課題の提出ページ
 ]
