@@ -1,14 +1,9 @@
-from django.urls import path
-from . import views
-
-urlpatterns = [
-    path('', views.task_list, name='task-list'),
-]
-
-from django.urls import include
+from django.contrib import admin
+from django.urls import path, include
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name='index.html'), name='home'),
-    path('tasks/', include('tasks.urls')),
+    path('tasks/', include('tasks.urls')),  # `tasks` のURLを読み込む
 ]
