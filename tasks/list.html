@@ -1,16 +1,14 @@
-<div class="container mt-5">
-    <h2 class="mb-4">課題一覧</h2>
-    <div class="row">
-        {% for task in tasks %}
-        <div class="col-md-4 mb-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">{{ task.title }}</h5>
-                    <p class="card-text">締切: {{ task.due_date }}</p>
-                    <p class="card-text">状況: {{ task.get_status_display }}</p>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
+{% extends "base.html" %}
+
+{% block content %}
+<h2>課題一覧</h2>
+
+<ul>
+    {% for task in tasks %}
+    <li>
+        <a href="{% url 'submit_task' task.id %}">{{ task.title }}</a> - 締切: {{ task.due_date }}
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
