@@ -1,7 +1,8 @@
 from django.urls import path
-from . import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('', views.task_list, name='task_list'),  # 課題一覧ページ
-    path('<int:task_id>/submit/', views.submit_task, name='submit_task'),  # 課題の提出ページ
+    path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('api/', TaskListAPI.as_view(), name='task_list_api'),
 ]

@@ -9,7 +9,8 @@ class Task(models.Model):
     
     title = models.CharField(max_length=255)  # 課題のタイトル
     description = models.TextField()          # 課題の詳細
-    due_date = models.DateField()             # 提出期限
+    due_date = models.DateField() 
+    is_completed = models.BooleanField(default=False)     # 提出期限
     status = models.CharField(
         max_length=10,
         choices=STATUS_CHOICES,
