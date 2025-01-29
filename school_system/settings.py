@@ -121,12 +121,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# 🔥 追加: `static/` フォルダをDjangoに認識させる
+# 追加、`static/` フォルダをDjangoに認識
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-# 🔥 追加: 本番環境用（デプロイ時に使用）
+# 追加、本番環境用（デプロイ時に使用）
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Default primary key field type

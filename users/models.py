@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-# 🔥 カスタムユーザーモデル（生徒・教師の役割を追加）
+# カスタムユーザーモデル（生徒・教師の役割を追加）
 class CustomUser(AbstractUser):
     ROLE_CHOICES = [
         ('student', '生徒'),

@@ -11,7 +11,7 @@ class Task(models.Model):
     ]
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='未提出')
 
-    # 🔥 追加: 課題提出用のファイルフィールド
+    # 課題提出用のファイルフィールド
     submission_file = models.FileField(upload_to='submissions/', null=True, blank=True)
 
     def __str__(self):
