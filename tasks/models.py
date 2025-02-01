@@ -4,9 +4,15 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class Task(models.Model):
-    title = models.CharField(max_length=200)
-    description = models.TextField()
-    due_date = models.DateField()
+    PRIORITY_CHOICES = [
+        ('高', '高'),
+        ('中', '中'),
+        ('低', '低'),
+    ]
+    priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='中')
+
+    class Meta:
+        ordering = ['-priority', 'due_date']  # 優先度 → 期限順
 
     STATUS_CHOICES = [
         ('未提出', '未提出'),

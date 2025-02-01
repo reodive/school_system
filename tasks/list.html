@@ -3,12 +3,35 @@
 {% block content %}
 <h2>課題一覧</h2>
 
-<ul>
-    {% for task in tasks %}
-    <li>
-        <a href="{% url 'submit_task' task.id %}">{{ task.title }}</a> - 締切: {{ task.due_date }}
-    </li>
-    {% endfor %}
-</ul>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>課題名</th>
+            <th>提出期限</th>
+            <th>提出状況</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for task in tasks %}
+        <tr>
+            <td>
+                <a href="{% url 'submit_task' task.id %}">{{ task.title }}</a>
+            </td>
+            <td>{{ task.due_date }}</td>
+            <td>
+                <div class="progress">
+                    {% if task.status == "未提出" %}
+                        <div class="progress-bar bg-danger" role="progressbar" style="width: 30%;">未提出</div>
+                    {% elif task.status == "提出済み" %}
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%;">提出済み</div>
+                    {% else %}
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: 60%;">再提出待ち</div>
+                    {% endif %}
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 {% endblock %}
