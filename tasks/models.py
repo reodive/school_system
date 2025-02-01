@@ -1,18 +1,12 @@
-from django.db import models
+from django.db import models  # 🔥 必ず追加する
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
 class Task(models.Model):
-    PRIORITY_CHOICES = [
-        ('高', '高'),
-        ('中', '中'),
-        ('低', '低'),
-    ]
-    priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='中')
-
-    class Meta:
-        ordering = ['-priority', 'due_date']  # 優先度 → 期限順
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    due_date = models.DateField(null=True, blank=True)
 
     STATUS_CHOICES = [
         ('未提出', '未提出'),
@@ -20,11 +14,11 @@ class Task(models.Model):
     ]
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='未提出')
 
-    # 🔥 追加: 課題の提出ファイルを管理するフィールド
     submission_file = models.FileField(upload_to='submissions/', null=True, blank=True)
-
-    # 🔥 追加: 課題を作成した教師
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tasks')
+
+    class Meta:
+        ordering = ['due_date']
 
     def __str__(self):
         return self.title

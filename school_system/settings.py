@@ -57,7 +57,7 @@ ROOT_URLCONF = 'school_system.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # templatesフォルダを指定
+        'DIRS': [BASE_DIR / 'templates'],  # ✅ テンプレートフォルダを指定
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -69,6 +69,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 
 WSGI_APPLICATION = 'school_system.wsgi.application'
@@ -145,3 +146,15 @@ EMAIL_HOST_PASSWORD = 'your-email-password'  # 環境変数で管理推奨
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'rest_framework',  # ← これがあることを確認！
+    'users',
+    'tasks',
+]
