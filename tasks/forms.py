@@ -1,7 +1,7 @@
 from django import forms
 from .models import Task
 
-class TaskSubmissionForm(forms.ModelForm):
+class TaskCreateForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['submission_file']  # 🔥 `models.FileField` ではなく `forms.FileField` を使用！
+        fields = ["title", "description", "due_date", "created_by"]
