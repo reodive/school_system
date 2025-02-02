@@ -1,2 +1,3 @@
 # 環境変数ファイルをGit管理から除外する
 .env
+".env"   # .gitignore �� .env ��ǉ�
