@@ -1,14 +1,11 @@
 # tasks/views.py
 
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Group, Announcement
-from .forms import AnnouncementForm  # まだ作っていない場合は後述
-from users.decorators import role_required
-from django.shortcuts import render, get_object_or_404
-from .models import Task, Group
-from googleapiclient.discovery import build
-from google.oauth2 import service_account
+from django.db import models  # ✅ `models` を追加
+from .models import Task, Feedback  # ✅ `Task` や `Feedback` を正しくインポート
+
 
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 SERVICE_ACCOUNT_FILE = "credentials.json"  # Google API の認証情報
