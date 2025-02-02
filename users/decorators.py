@@ -1,8 +1,11 @@
 # users/decorators.py
-from django.core.exceptions import PermissionDenied
 from functools import wraps
+from django.core.exceptions import PermissionDenied
 
 def role_required(allowed_roles=[]):
+    """
+    ユーザーの role が allowed_roles に含まれている場合にのみビューにアクセスを許可するデコレーター。
+    """
     def decorator(view_func):
         @wraps(view_func)
         def _wrapped_view(request, *args, **kwargs):

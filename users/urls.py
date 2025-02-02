@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
-    # 他のユーザー関連の URL（ログイン、サインアップなど）
+    path('group/<int:group_id>/', views.group_detail, name='group_detail'),
+    # ログイン、サインアップ、ログアウトの URL もここに定義するか、Django 標準の auth URL を利用
 ]

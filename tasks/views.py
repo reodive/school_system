@@ -1,31 +1,43 @@
 """
 tasks/views.py
 
-このファイルは、課題（Task）、お知らせ（Announcement）および Google Calendar 連携機能など、
-tasks アプリの各種ビューを定義しています。
+このファイルは、課題 (Task)、お知らせ (Announcement) および
+Google Calendar 連携機能など、tasks アプリの各種ビューを定義しています。
 """
 
 import logging
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+
+# 必要なモデルとフォームのインポート
 from .models import Task, Group, Announcement
 from users.models import CustomUser
 from .forms import TaskForm, AnnouncementForm
 from users.decorators import role_required
+
+# Google API 関連のライブラリ
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
-# ログ設定
+# DRF のインポート
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import TaskSerializer
+
+# ログ設定（必要に応じて logging 設定ファイルで調整してください）
 logger = logging.getLogger(__name__)
 
+# Google Calendar API 用の定数
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
-SERVICE_ACCOUNT_FILE = "credentials.json"  # 認証情報のパス
+SERVICE_ACCOUNT_FILE = "credentials.json"  # 認証情報ファイルのパス
 
 def add_to_calendar(task):
     """
     指定された課題 (task) を Google Calendar に登録する関数。
-    成功すればイベント情報を返し、失敗すれば None を返す。
+    認証に成功しイベントが作成できれば、そのイベント情報を返し、失敗すれば None を返します。
     """
     try:
         creds = service_account.Credentials.from_service_account_file(
@@ -58,7 +70,7 @@ def task_list(request):
 def create_task(request):
     """
     課題を作成するビュー。
-    ログインユーザーが教師または管理者でなければアクセスできません。
+    ログインユーザーが教師または管理者でなければアクセス不可。
     """
     if request.method == 'POST':
         form = TaskForm(request.POST, request.FILES)
@@ -66,7 +78,7 @@ def create_task(request):
             task = form.save(commit=False)
             task.created_by = request.user
             task.save()
-            # Google Calendar への登録をオプションで実施
+            # オプション：Google Calendar への登録
             if add_to_calendar(task) is None:
                 logger.warning("Google Calendar への登録に失敗しました。")
             return redirect('task_list')
@@ -110,3 +122,27 @@ def announcement_create(request, group_id):
         'group': group,
         'form': form,
     })
+
+class TaskListAPI(APIView):
+    """
+    全課題を JSON 形式で返す API ビュー
+    """
+    def get(self, request, format=None):
+        tasks = Task.objects.all()
+        serializer = TaskSerializer(tasks, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import TaskSerializer
+from .models import Task
+
+class TaskListAPI(APIView):
+    """
+    全課題を JSON 形式で返す API ビュー
+    """
+    def get(self, request, format=None):
+        tasks = Task.objects.all()
+        serializer = TaskSerializer(tasks, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

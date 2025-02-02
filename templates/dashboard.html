@@ -6,7 +6,7 @@
   <ul class="list-group">
     {% for group in groups %}
       <li class="list-group-item">
-         <a href="{% url 'group_detail' group.id %}">{{ group.name }}</a>
+        <a href="{% url 'group_detail' group.id %}">{{ group.name }}</a>
       </li>
     {% empty %}
       <li class="list-group-item">所属するグループはありません。</li>
