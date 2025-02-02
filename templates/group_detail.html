@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}{{ group.name }} の詳細{% endblock %}
+{% block content %}
+  <h1>{{ group.name }} の詳細</h1>
+  <h2>課題一覧</h2>
+  <ul class="list-group">
+    {% for task in tasks %}
+      <li class="list-group-item">{{ task.title }} (締切: {{ task.due_date }})</li>
+    {% empty %}
+      <li class="list-group-item">課題はありません。</li>
+    {% endfor %}
+  </ul>
+  <h2>お知らせ一覧</h2>
+  <ul class="list-group">
+    {% for ann in announcements %}
+      <li class="list-group-item">{{ ann.title }} ({{ ann.created_at|date:"Y-m-d" }})</li>
+    {% empty %}
+      <li class="list-group-item">お知らせはありません。</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
+{% block title %}ダッシュボード{% endblock %}
 {% block content %}
-<h1>ダッシュボード</h1>
-
-<h2>所属クラス</h2>
-<ul>
-  {% for group in groups %}
-    <li><a href="{% url 'task_list' group.id %}">{{ group.name }}</a></li>
-  {% endfor %}
-</ul>
-
+  <h1>ダッシュボード</h1>
+  <h2>所属グループ</h2>
+  <ul class="list-group">
+    {% for group in groups %}
+      <li class="list-group-item">
+         <a href="{% url 'group_detail' group.id %}">{{ group.name }}</a>
+      </li>
+    {% empty %}
+      <li class="list-group-item">所属するグループはありません。</li>
+    {% endfor %}
+  </ul>
 {% endblock %}

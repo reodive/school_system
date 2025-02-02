@@ -1,18 +1,14 @@
-# users/decorators.py (例)
-
-from django.shortcuts import redirect
+# users/decorators.py
+from django.core.exceptions import PermissionDenied
 from functools import wraps
 
 def role_required(allowed_roles=[]):
     def decorator(view_func):
         @wraps(view_func)
-        def wrapper(request, *args, **kwargs):
-            if not request.user.is_authenticated:
-                return redirect('login')  # ログイン画面へ
-            
-            if request.user.role not in allowed_roles:
-                # ロールが許可されていない場合、トップやエラーへ
-                return redirect('home')  # または 403 Forbidden にする
-            return view_func(request, *args, **kwargs)
-        return wrapper
+        def _wrapped_view(request, *args, **kwargs):
+            if request.user.is_authenticated and request.user.role in allowed_roles:
+                return view_func(request, *args, **kwargs)
+            else:
+                raise PermissionDenied("この操作を行う権限がありません。")
+        return _wrapped_view
     return decorator
