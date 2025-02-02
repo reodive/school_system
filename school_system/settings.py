@@ -5,8 +5,8 @@ from dotenv import load_dotenv
 # プロジェクトのルートディレクトリを取得
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ✅ `.env` をロード（パス指定不要）
-load_dotenv()
+env_path = os.path.join(os.path.dirname(__file__), "..", ".env")
+load_dotenv(env_path)
 
 # ✅ 環境変数を取得（デフォルト値あり）
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "default-secret-key")
