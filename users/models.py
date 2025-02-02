@@ -12,3 +12,6 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
+    
+    groups = models.ManyToManyField('tasks.Group', blank=True, related_name='students')
+    ...

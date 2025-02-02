@@ -1,7 +1,8 @@
+# tasks/forms.py
 from django import forms
-from .models import Task
+from .models import Announcement
 
-class TaskCreateForm(forms.ModelForm):
+class AnnouncementForm(forms.ModelForm):
     class Meta:
-        model = Task
-        fields = ["title", "description", "due_date", "created_by"]
+        model = Announcement
+        fields = ['title', 'content']  # 必要に応じて追加フィールド

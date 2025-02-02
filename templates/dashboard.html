@@ -1,12 +1,12 @@
-{% extends "base.html" %}
-
-{% block title %}ダッシュボード{% endblock %}
-
+{% extends 'base.html' %}
 {% block content %}
-<h2>ダッシュボード</h2>
-<p>ようこそ、{{ user.username }} さん！</p>
+<h1>ダッシュボード</h1>
+
+<h2>所属クラス</h2>
 <ul>
-    <li><a href="{% url 'task_list' %}">課題一覧</a></li>
-    <li><a href="{% url 'create_task' %}">新しい課題を作成</a></li>
+  {% for group in groups %}
+    <li><a href="{% url 'task_list' group.id %}">{{ group.name }}</a></li>
+  {% endfor %}
 </ul>
+
 {% endblock %}

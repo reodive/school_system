@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{ group.name }} のお知らせ</h2>
+
+<a href="{% url 'announcement_create' group.id %}" class="btn btn-primary">新規投稿</a>
+
+<hr>
+{% for ann in announcements %}
+  <div class="card mb-3">
+    <div class="card-body">
+      <h5>{{ ann.title }}</h5>
+      <p>{{ ann.content }}</p>
+      <small>投稿者: {{ ann.created_by.username }} / 投稿日: {{ ann.created_at }}</small>
+    </div>
+  </div>
+{% endfor %}
+{% endblock %}
