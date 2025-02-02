@@ -5,22 +5,26 @@ from dotenv import load_dotenv
 # プロジェクトのルートディレクトリを取得
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-env_path = os.path.join(os.path.dirname(__file__), "..", ".env")
-load_dotenv(env_path)
+# .env ファイルのロード
+env_path = os.path.join(BASE_DIR, '.env')
+if os.path.exists(env_path):
+    load_dotenv(env_path)
+    print(f"✅ .env file loaded from {env_path}")
+else:
+    print("⚠️ .env file not found!")
 
-# ✅ 環境変数を取得（デフォルト値あり）
+# 環境変数の取得（デフォルト値あり）
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "default-secret-key")
+DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() in ("true", "1", "yes")
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 
-# ✅ 環境変数で DEBUG を管理（環境変数が "True" の場合のみ有効）
-DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
-
-# ✅ デバッグ用（環境変数の値を出力して確認）
+# デバッグ用出力
 print(f"🔍 DEBUG = {DEBUG}")
-print(f"🔍 SECRET_KEY = {SECRET_KEY[:10]}********")  # 長いキーを隠す
+print(f"🔍 SECRET_KEY = {SECRET_KEY[:10]}********")
+print(f"🔍 DATABASE_NAME = {os.getenv('DATABASE_NAME')}")
 print(f"🔍 DATABASE_USER = {os.getenv('DATABASE_USER')}")
+print(f"🔍 DATABASE_HOST = {os.getenv('DATABASE_HOST')}")
 print(f"🔍 EMAIL_HOST_USER = {os.getenv('EMAIL_HOST_USER')}")
-
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # アプリケーション定義
 INSTALLED_APPS = [
@@ -30,7 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',  # APIサポート
+    'rest_framework',
     'users',
     'tasks',
 ]
@@ -50,7 +54,7 @@ ROOT_URLCONF = 'school_system.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # ✅ テンプレートフォルダを指定
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -65,19 +69,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'school_system.wsgi.application'
 
-# ✅ データベース設定（環境変数から取得）
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv("DATABASE_NAME", "school_system_db"),
-        'USER': os.getenv("DATABASE_USER", "default_user"),
-        'PASSWORD': os.getenv("DATABASE_PASSWORD", "default_password"),
+        'USER': os.getenv("DATABASE_USER", "postgres"),
+        'PASSWORD': os.getenv("DATABASE_PASSWORD", "your_postgres_password"),
         'HOST': os.getenv("DATABASE_HOST", "localhost"),
         'PORT': os.getenv("DATABASE_PORT", "5432"),
+        'CONN_MAX_AGE': 600,  # データベース接続を保持してパフォーマンス向上
     }
 }
 
-# パスワードバリデーション
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -85,32 +88,25 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# ✅ 日本時間に設定
 LANGUAGE_CODE = 'ja'
 TIME_ZONE = 'Asia/Tokyo'
-
 USE_I18N = True
 USE_TZ = True
 
-# 静的ファイル（CSS, JS, 画像）
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# メディアファイル（アップロード用）
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# カスタムユーザーモデル
 AUTH_USER_MODEL = 'users.CustomUser'
 
-# ✅ メール設定（環境変数を利用）
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "False").lower() in ("true", "1", "yes")
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "default@gmail.com")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "default_password")
 
-# ✅ デフォルトのプライマリーキー
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
