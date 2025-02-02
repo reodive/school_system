@@ -1,33 +1,32 @@
 """
 tasks/views.py
 
-このファイルは、課題 (Task)、お知らせ (Announcement) および
-Google Calendar 連携機能など、tasks アプリの各種ビューを定義しています。
+このファイルは、課題 (Task)、お知らせ (Announcement)、Google Calendar 連携機能、
+および REST API 用のビューなど、tasks アプリの各種ビューを定義しています。
 """
 
 import logging
-
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 
-# 必要なモデルとフォームのインポート
+# モデル、フォーム、ユーザー管理、カスタムデコレーターのインポート
 from .models import Task, Group, Announcement
 from users.models import CustomUser
-from .forms import TaskForm, AnnouncementForm
+from .forms import TaskForm, AnnouncementForm, TaskSubmissionForm
 from users.decorators import role_required
 
 # Google API 関連のライブラリ
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
-# DRF のインポート
+# DRF (Django REST framework) 関連のインポート
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import TaskSerializer
 
-# ログ設定（必要に応じて logging 設定ファイルで調整してください）
+# ログ設定（logging 設定ファイルでさらに調整可能）
 logger = logging.getLogger(__name__)
 
 # Google Calendar API 用の定数
@@ -70,7 +69,7 @@ def task_list(request):
 def create_task(request):
     """
     課題を作成するビュー。
-    ログインユーザーが教師または管理者でなければアクセス不可。
+    ログインユーザーが教師または管理者でなければアクセスできません。
     """
     if request.method == 'POST':
         form = TaskForm(request.POST, request.FILES)
@@ -78,7 +77,7 @@ def create_task(request):
             task = form.save(commit=False)
             task.created_by = request.user
             task.save()
-            # オプション：Google Calendar への登録
+            # オプション: Google Calendar への登録
             if add_to_calendar(task) is None:
                 logger.warning("Google Calendar への登録に失敗しました。")
             return redirect('task_list')
@@ -132,17 +131,20 @@ class TaskListAPI(APIView):
         serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from .serializers import TaskSerializer
-from .models import Task
-
-class TaskListAPI(APIView):
+# submit_task の定義（重複がないように1回だけ実装）
+@login_required
+def submit_task(request, task_id):
     """
-    全課題を JSON 形式で返す API ビュー
+    指定された課題 (task_id) に対して提出ファイルをアップロードするビュー。
     """
-    def get(self, request, format=None):
-        tasks = Task.objects.all()
-        serializer = TaskSerializer(tasks, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    task = get_object_or_404(Task, pk=task_id)
+    if request.method == 'POST':
+        form = TaskSubmissionForm(request.POST, request.FILES, instance=task)
+        if form.is_valid():
+            form.save()
+            return redirect('task_list')
+        else:
+            logger.warning("TaskSubmissionForm エラー: %s", form.errors)
+    else:
+        form = TaskSubmissionForm(instance=task)
+    return render(request, 'tasks/submit.html', {'form': form, 'task': task})
