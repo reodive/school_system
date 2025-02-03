@@ -4,6 +4,20 @@ from .forms import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from tasks.models import Group
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from .serializers import UserSerializer
+
+class UserProfileAPI(APIView):
+    """
+    API to retrieve user profile information
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
 
 @login_required
 def group_detail(request, group_id):
@@ -35,6 +49,8 @@ def user_logout(request):
 
 @login_required
 def dashboard(request):
-    # ユーザーが所属するグループを両方（教師、学生）から取得
-    my_groups = request.user.groups.all()
-    return render(request, 'dashboard.html', {'groups': my_groups})
+    # ユーザーが参加しているカスタムグループを取得
+    my_groups = request.user.groups.all()  # ← Django 標準の Group ではなく
+    custom_groups = Group.objects.filter(members=request.user)  # ← `tasks.models.Group` を取得
+
+    return render(request, 'dashboard.html', {'groups': custom_groups})

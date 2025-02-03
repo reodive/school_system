@@ -5,14 +5,14 @@
   
   <h2>課題一覧</h2>
   <ul class="list-group">
-    {% for task in tasks %}
-      <li class="list-group-item">
-         {{ task.title }} (締切: {{ task.due_date }})
-      </li>
-    {% empty %}
-      <li class="list-group-item">課題はありません。</li>
-    {% endfor %}
-  </ul>
+      {% for task in tasks %}
+        <li class="list-group-item">
+           <a href="{% url 'submit_task' task.id %}">{{ task.title }}</a> (締切: {{ task.due_date }})
+        </li>
+      {% empty %}
+        <li class="list-group-item">課題はありません。</li>
+      {% endfor %}
+  </ul>  
   
   <h2>お知らせ一覧</h2>
   <ul class="list-group">

@@ -5,7 +5,7 @@ from .views import TaskDetailAPI, TaskListAPI
 urlpatterns = [
     # 課題関連
     path('', views.task_list, name='task_list'),  # 課題一覧
-    path('create/', views.create_task, name='create_task'),  # 課題作成
+    path('tasks/create/', views.create_task, name='create_task'),
     path('<int:task_id>/submit/', views.submit_task, name='submit_task'),  # 課題提出（実装済み）
     
     # お知らせ関連
@@ -16,6 +16,7 @@ urlpatterns = [
     path('<int:group_id>/tasks/', views.task_list, name='group_task_list'),
     
     # REST API
-    path('api/', TaskListAPI.as_view(), name='task_list_api'),  # 課題一覧 API
-    path('api/<int:task_id>/', TaskDetailAPI.as_view(), name='task_detail_api'),  # 課題詳細 API
+    path('api/tasks/', TaskListAPI.as_view(), name='task_list_api'),
+    path('api/tasks/<int:task_id>/', TaskDetailAPI.as_view(), name='task_detail_api'),
+
 ]

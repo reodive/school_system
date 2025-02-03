@@ -26,7 +26,6 @@ print(f"🔍 DATABASE_USER = {os.getenv('DATABASE_USER', 'Not Set')}")
 print(f"🔍 DATABASE_HOST = {os.getenv('DATABASE_HOST', 'Not Set')}")
 print(f"🔍 EMAIL_HOST_USER = {os.getenv('EMAIL_HOST_USER', 'Not Set')}")
 
-# ===== アプリケーション定義 =====
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -34,9 +33,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',  # Django REST framework
-    'users',
-    'tasks',
+    'tasks',  # ✅ tasks アプリ
+    'users',  # ✅ users アプリ (ない場合は追加する)
 ]
 
 MIDDLEWARE = [
@@ -74,14 +72,17 @@ WSGI_APPLICATION = 'school_system.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("DATABASE_NAME", "school_system_db"),
-        'USER': os.getenv("DATABASE_USER", "postgres"),
-        'PASSWORD': os.getenv("DATABASE_PASSWORD", ""),
-        'HOST': os.getenv("DATABASE_HOST", "localhost"),
-        'PORT': os.getenv("DATABASE_PORT", "5432"),
-        'CONN_MAX_AGE': 600,  # 接続を10分間再利用してパフォーマンス向上
+        'NAME': 'school_system_db',
+        'USER': 'postgres',
+        'PASSWORD': 'your_password',  # 適切なパスワードに置き換える
+        'HOST': 'localhost',
+        'PORT': '5432',
+        'OPTIONS': {
+            'adapter': 'psycopg'  # psycopg2ではなく、新しい psycopg を指定
+        }
     }
 }
+
 
 # ===== 認証とパスワードバリデーション =====
 AUTH_PASSWORD_VALIDATORS = [

@@ -1,12 +1,10 @@
-{% extends "base.html" %}
-
-{% block title %}ユーザー登録{% endblock %}
-
-{% block content %}
-<h2>アカウントを作成</h2>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
+    <label for="id_role">ユーザータイプ:</label>
+    <select name="role" id="id_role">
+        <option value="student">生徒</option>
+        <option value="teacher">教師</option>
+    </select>
     <button type="submit" class="btn btn-success">登録</button>
 </form>
-{% endblock %}

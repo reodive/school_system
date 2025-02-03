@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>課題一覧</title>
+</head>
+<body>
+    <h1>課題一覧</h1>
+    <ul>
+        {% for task in tasks %}
+            <li>{{ task.title }} - 締切: {{ task.due_date }}</li>
+        {% empty %}
+            <li>現在、課題はありません。</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

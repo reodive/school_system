@@ -3,34 +3,45 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from datetime import datetime, timedelta
+from .serializers import TaskSerializer, AnnouncementSerializer  # TaskSerializer was missing
 
-# モデル、フォーム、ユーザー管理、カスタムデコレーターのインポート
+# Importing models, forms, user management, and custom decorators
 from .models import Task, Announcement
 from users.models import CustomUser
 from .forms import TaskForm, AnnouncementForm, TaskSubmissionForm
 from users.decorators import role_required
 
-# Google API 関連のライブラリ
+# Google API integration
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
-# Django REST framework 関連
+# Django REST framework imports
+
+from rest_framework import status
+from .serializers import AnnouncementSerializer  # ← UserSerializer を削除
+from users.serializers import UserSerializer  # ← users から正しくインポート
+from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-from .serializers import TaskSerializer, AnnouncementSerializer, UserSerializer
-from rest_framework.permissions import IsAuthenticated
 
-# ログ設定
+# Logger configuration
 logger = logging.getLogger(__name__)
 
-# Google Calendar API 設定
+# Google Calendar API settings
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 SERVICE_ACCOUNT_FILE = "credentials.json"
 
+@login_required
+def task_list(request):
+    """
+    View to display a list of tasks
+    """
+    tasks = Task.objects.all()
+    return render(request, 'tasks/task_list.html', {'tasks': tasks})
+
 def add_to_calendar(task):
     """
-    課題を Google Calendar に登録する関数
+    Function to add a task to Google Calendar
     """
     try:
         creds = service_account.Credentials.from_service_account_file(
@@ -50,15 +61,43 @@ def add_to_calendar(task):
         created_event = service.events().insert(calendarId="primary", body=event).execute()
         logger.info(f"Google Calendar event created: {created_event}")
         return created_event
-    except Exception as e:
-        logger.error(f"Google Calendar 連携エラー: {e}", exc_info=True)
+    except FileNotFoundError:
+        logger.critical("Google Calendar API credentials file (credentials.json) is missing. Task cannot be added.")
         return None
+    except Exception as e:
+        logger.error(f"Google Calendar integration error: {e}", exc_info=True)
+        return None
+
+@login_required
+def announcement_list(request):
+    """
+    View to display a list of announcements
+    """
+    announcements = Announcement.objects.all()
+    return render(request, 'tasks/announcement_list.html', {'announcements': announcements})
+
+@login_required
+@role_required(allowed_roles=['teacher', 'admin'])
+def announcement_create(request):
+    """
+    View to create an announcement (for teachers and admins only)
+    """
+    if request.method == 'POST':
+        form = AnnouncementForm(request.POST)
+        if form.is_valid():
+            announcement = form.save(commit=False)
+            announcement.created_by = request.user
+            announcement.save()
+            return redirect('announcement_list')
+    else:
+        form = AnnouncementForm()
+    return render(request, 'tasks/announcement_form.html', {'form': form})
 
 @login_required
 @role_required(allowed_roles=['teacher', 'admin'])
 def create_task(request):
     """
-    課題を作成するビュー（教師・管理者専用）
+    View to create a task (for teachers and admins only)
     """
     if request.method == 'POST':
         form = TaskForm(request.POST, request.FILES)
@@ -68,10 +107,10 @@ def create_task(request):
             task.save()
             created_event = add_to_calendar(task)
             if created_event is None:
-                logger.warning("Google Calendar への登録に失敗しました。")
+                logger.warning("Failed to register task on Google Calendar.")
             return redirect('task_list')
         else:
-            logger.warning(f"TaskForm エラー: {form.errors}")
+            logger.warning(f"TaskForm error: {form.errors}")
     else:
         form = TaskForm()
     return render(request, 'tasks/task_form.html', {'form': form})
@@ -79,7 +118,7 @@ def create_task(request):
 @login_required
 def submit_task(request, task_id):
     """
-    課題を提出するビュー
+    View to submit a task
     """
     task = get_object_or_404(Task, pk=task_id)
     if request.method == 'POST':
@@ -88,21 +127,32 @@ def submit_task(request, task_id):
             submission = form.save(commit=False)
             submission.task = task
             submission.submitted_by = request.user
-            submission.status = "提出済み"  # 提出状態を変更
+            submission.status = "Submitted"
             submission.save()
             return redirect('task_list')
     else:
         form = TaskSubmissionForm()
     return render(request, 'tasks/submit.html', {'form': form, 'task': task})
 
+class TaskListAPI(ListAPIView):
+    serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        return Task.objects.filter(assigned_to=self.request.user)
+
 class TaskDetailAPI(APIView):
     """
-    特定の課題を取得・更新・削除する API
+    API to retrieve, update, and delete a specific task
     """
-    def get(self, request, task_id, format=None):
-        task = get_object_or_404(Task, pk=task_id)
-        serializer = TaskSerializer(task)
-        return Response(serializer.data)
+def get(self, request, task_id, format=None):
+    try:
+        task = Task.objects.get(pk=task_id)
+    except Task.DoesNotExist:
+        return Response({"error": "Task not found."}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = TaskSerializer(task)
+    return Response(serializer.data)
+
 
     @role_required(allowed_roles=['teacher', 'admin'])
     def put(self, request, task_id, format=None):
@@ -111,17 +161,11 @@ class TaskDetailAPI(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        logger.warning(f"Task update error: {serializer.errors}")
+        return Response({"error": "Validation failed.", "details": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     @role_required(allowed_roles=['teacher', 'admin'])
     def delete(self, request, task_id, format=None):
         task = get_object_or_404(Task, pk=task_id)
         task.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
-class UserProfileAPI(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        serializer = UserSerializer(request.user)
-        return Response(serializer.data)
