@@ -74,12 +74,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'school_system_db',
         'USER': 'postgres',
-        'PASSWORD': 'your_password',  # 適切なパスワードに置き換える
+        'PASSWORD': 'tIUnct4i', 
         'HOST': 'localhost',
         'PORT': '5432',
-        'OPTIONS': {
-            'adapter': 'psycopg'  # psycopg2ではなく、新しい psycopg を指定
-        }
     }
 }
 

@@ -32,12 +32,17 @@ SCOPES = ["https://www.googleapis.com/auth/calendar"]
 SERVICE_ACCOUNT_FILE = "credentials.json"
 
 @login_required
+
 def task_list(request):
-    """
-    View to display a list of tasks
-    """
-    tasks = Task.objects.all()
-    return render(request, 'tasks/task_list.html', {'tasks': tasks})
+    # 必要なコンテキストデータを用意
+    tasks = [
+        # ダミーデータまたは実際のデータを取得
+        {'title': '数学の宿題', 'deadline': '2025-02-10'},
+        {'title': '英語レポート', 'deadline': '2025-02-15'},
+    ]
+    context = {'tasks': tasks}
+    return render(request, 'tasks/task_list.html', context)
+
 
 def add_to_calendar(task):
     """
@@ -169,3 +174,6 @@ def get(self, request, task_id, format=None):
         task = get_object_or_404(Task, pk=task_id)
         task.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+def home(request):
+    return render(request, 'home.html')

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}生徒ダッシュボード{% endblock %}
+
+{% block content %}
+<h2>生徒ダッシュボード</h2>
+<h3>進捗状況</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>課題名</th>
+            <th>提出状況</th>
+            <th>進捗率</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for assignment in assignments %}
+        <tr>
+            <td>{{ assignment.title }}</td>
+            <td>
+                {% if assignment.submitted %}
+                    <span class="badge bg-success">提出済み</span>
+                {% else %}
+                    <span class="badge bg-warning">未提出</span>
+                {% endif %}
+            </td>
+            <td>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: {{ assignment.progress }}%;" aria-valuenow="{{ assignment.progress }}" aria-valuemin="0" aria-valuemax="100">
+                        {{ assignment.progress }}%
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

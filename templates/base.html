@@ -9,17 +9,42 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <!-- 独自のスタイルシート -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        /* Apple風ナビゲーションバーのカスタマイズ例 */
+        .navbar-apple {
+            background-color: #ffffff;  /* 白ベース */
+            border-bottom: 1px solid #e0e0e0;  /* 控えめなボーダー */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);  /* 軽い影 */
+            padding: 0.8rem 1rem;
+        }
+        .navbar-apple .navbar-brand {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+        .navbar-apple .nav-link {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #555;
+            margin-left: 1rem;
+        }
+        .navbar-apple .nav-link:hover {
+            color: #000;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <!-- Apple風にカスタマイズしたナビゲーションバー -->
+        <nav class="navbar navbar-expand-lg navbar-apple">
             <div class="container-fluid">
-                <a class="navbar-brand" href="{% url 'home' %}">学習支援システム</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <!-- templates/base.html の例 -->
+                <a class="navbar-brand" href="{% url 'task_list' %}">学習支援システム</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarApple"
+                        aria-controls="navbarApple" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="collapse navbar-collapse" id="navbarApple">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         {% if user.is_authenticated %}
                             {% if user.role == "teacher" or user.role == "admin" %}

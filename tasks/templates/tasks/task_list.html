@@ -1,17 +1,20 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>課題一覧</title>
-</head>
-<body>
-    <h1>課題一覧</h1>
-    <ul>
-        {% for task in tasks %}
-            <li>{{ task.title }} - 締切: {{ task.due_date }}</li>
-        {% empty %}
-            <li>現在、課題はありません。</li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+<!-- 例：tasks/templates/tasks/task_list.html -->
+{% extends "base.html" %}
+
+{% block title %}課題一覧{% endblock %}
+
+{% block content %}
+<h2>課題一覧</h2>
+<div class="row">
+    {% for task in tasks %}
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">{{ task.title }}</h5>
+                <p class="card-text">締切: {{ task.deadline }}</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

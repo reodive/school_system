@@ -2,12 +2,12 @@ from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
 from .forms import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404
-from tasks.models import Group
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .serializers import UserSerializer
+from tasks.models import Task  
 
 class UserProfileAPI(APIView):
     """
@@ -54,3 +54,11 @@ def dashboard(request):
     custom_groups = Group.objects.filter(members=request.user)  # ← `tasks.models.Group` を取得
 
     return render(request, 'dashboard.html', {'groups': custom_groups})
+# users/views.py の末尾など、適切な場所に追加
+
+@login_required
+def student_dashboard(request):
+    # データベースから生徒に関連する課題情報を取得
+    assignments = Assignment.objects.filter(student=request.user)
+    context = {'assignments': assignments}
+    return render(request, 'student_dashboard.html', context)
