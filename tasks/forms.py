@@ -15,5 +15,4 @@ class AnnouncementForm(forms.ModelForm):
 class TaskSubmissionForm(forms.ModelForm):
     class Meta:
         model = Task
-        # 提出ファイルのみ更新する例です。必要に応じて他のフィールドを追加してください。
-        fields = ['submission_file']
+        fields = ['submission_file', 'status']  # ステータスを追加
