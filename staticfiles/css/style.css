@@ -1,52 +1,103 @@
-header {
-    background: #333;
-    color: #fff;
-    padding: 1rem 0;
-    text-align: center;
+:root {
+  --primary-bg: #ffffff;
+  --primary-color: #333333;
+  --accent-color: #1a73e8;
+  --secondary-bg: #f2f2f2;
+  --transition-speed: 0.3s;
+  --font-family: 'Roboto', sans-serif;
 }
 
-@media (max-width: 768px) {
-    header nav {
-        flex-direction: column;
-    }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background-color: var(--secondary-bg);
+  font-family: var(--font-family);
+  color: var(--primary-color);
+  line-height: 1.6;
 }
 
-header nav {
-    background-color: #333;
-    color: white;
-    padding: 10px;
-    display: flex;
-    justify-content: space-around;
+header {
+  background: var(--primary-bg);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 1rem 0;
+  transition: padding var(--transition-speed);
 }
 
-nav a {
-    color: white;
-    text-decoration: none;
-    padding: 5px 10px;
+.navbar-custom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
-nav a:hover {
-    background-color: #575757;
-    border-radius: 5px;
+.navbar-custom .navbar-brand {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color var(--transition-speed);
 }
 
-main {
-    padding: 20px;
+.navbar-custom .navbar-brand:hover {
+  color: var(--accent-color);
+}
+
+.navbar-custom .nav-menu {
+  display: flex;
+  gap: 1rem;
+}
+
+.navbar-custom .nav-menu a {
+  color: var(--primary-color);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  transition: background var(--transition-speed), color var(--transition-speed);
+}
+
+.navbar-custom .nav-menu a:hover {
+  background-color: var(--accent-color);
+  color: #fff;
+}
+
+main.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
 }
 
 footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+  background: var(--primary-bg);
+  color: var(--primary-color);
+  text-align: center;
+  padding: 1rem 0;
+  font-size: 0.9rem;
+}
+
+/* アニメーション用クラス（Animate.cssが使えない場合、自作も可能） */
+.animate-fadeIn {
+  animation: fadeIn 0.8s ease-in-out both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .navbar-custom {
+      flex-direction: column;
+  }
 }

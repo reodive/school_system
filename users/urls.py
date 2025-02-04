@@ -2,8 +2,18 @@ from django.urls import path
 from . import views
 from .views import UserProfileAPI
 from django.contrib.auth import views as auth_views
+from .views import teacher_dashboard
+from .views import student_dashboard
+from .forms import CustomAuthenticationForm
+from .views import signup
 
 urlpatterns = [
+    path('login/', auth_views.LoginView.as_view(
+        template_name='login.html',
+        authentication_form=CustomAuthenticationForm
+    ), name='login'),
+    path('signup/', signup, name='signup'),
+
     # API エンドポイント
     path('api/profile/', UserProfileAPI.as_view(), name='user_profile_api'),
     
@@ -23,5 +33,7 @@ urlpatterns = [
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='users/password_reset_complete.html'), name='password_reset_complete'),
 
     # ここに生徒ダッシュボードのURLパターンを追加
-    path('student/dashboard/', views.student_dashboard, name='student_dashboard'),
+    path('dashboard/student/', student_dashboard, name='student_dashboard'),
+    path('dashboard/teacher/', teacher_dashboard, name='teacher_dashboard'),
+    path('notifications/', get_notifications, name='get_notifications'),
 ]

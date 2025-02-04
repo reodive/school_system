@@ -18,5 +18,4 @@ urlpatterns = [
     # REST API
     path('api/tasks/', TaskListAPI.as_view(), name='task_list_api'),
     path('api/tasks/<int:task_id>/', TaskDetailAPI.as_view(), name='task_detail_api'),
-
 ]

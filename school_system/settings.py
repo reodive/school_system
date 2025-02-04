@@ -146,3 +146,7 @@ LOGGING = {
 
 # ===== デフォルトのプライマリーキー =====
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+GOOGLE_CREDENTIALS_FILE = os.path.join(BASE_DIR, 'google_credentials.json')
+# その他、必要な設定（カレンダーIDなど）も追加可能
+GOOGLE_CALENDAR_ID = 'your_calendar_id@group.calendar.google.com'

@@ -1,36 +1,50 @@
+# users/forms.py
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import CustomUser
 
-# 既存のログインフォーム
+# カスタムログインフォーム
 class CustomAuthenticationForm(AuthenticationForm):
     username = forms.CharField(
         max_length=254,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'ユーザー名'
+            'placeholder': 'ユーザー名',
+            'autocomplete': 'username'
         })
     )
     password = forms.CharField(
         label="パスワード",
         widget=forms.PasswordInput(attrs={
             'class': 'form-control',
-            'placeholder': 'パスワード'
+            'placeholder': 'パスワード',
+            'autocomplete': 'current-password'
         })
     )
+    
+    # ※ 必要に応じて clean メソッドなどをオーバーライドして、
+    #     入力値のバリデーションやカスタムエラーメッセージを追加することも可能です。
 
 # カスタムユーザー登録フォーム
 class CustomUserCreationForm(UserCreationForm):
+    # 必要に応じて、email フィールドを必須にする例
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'メールアドレス'
+        })
+    )
+
     class Meta:
         model = CustomUser
-        # カスタムユーザーモデルに合わせて必要なフィールドを指定します。
-        # 例: username, email, role (ユーザーの役割) など
-        fields = ('username', 'email', 'role')
-        
-    # 必要に応じて、フィールドのウィジェットやバリデーションのカスタマイズも可能です。
+        # CustomUser に合わせたフィールド設定。role フィールドは選択肢になっている想定です。
+        fields = ('username', 'email', 'role', 'password1', 'password2')
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # 各フィールドにBootstrapのCSSクラスを追加する例
+        
+        # 共通のウィジェットクラスを追加し、視認性を向上させます。
         self.fields['username'].widget.attrs.update({
             'class': 'form-control',
             'placeholder': 'ユーザー名'
@@ -40,9 +54,8 @@ class CustomUserCreationForm(UserCreationForm):
             'placeholder': 'メールアドレス'
         })
         self.fields['role'].widget.attrs.update({
-            'class': 'form-control',
+            'class': 'form-select',  # role は選択肢フィールドの場合、form-select を使用するのが適切
         })
-        # パスワードフィールドも同様に
         self.fields['password1'].widget.attrs.update({
             'class': 'form-control',
             'placeholder': 'パスワード'
@@ -51,3 +64,13 @@ class CustomUserCreationForm(UserCreationForm):
             'class': 'form-control',
             'placeholder': 'パスワード（確認）'
         })
+        
+        # 各フィールドのラベルやヘルプテキストをカスタマイズする場合の例
+        self.fields['username'].label = "ユーザー名"
+        self.fields['email'].label = "メールアドレス"
+        self.fields['role'].label = "ユーザーの役割"
+        self.fields['password1'].label = "パスワード"
+        self.fields['password2'].label = "パスワード確認"
+
+        # さらに、エラー発生時の表示用にエラークラスの設定が必要な場合は、
+        # テンプレート側で form.errors を確認し、Bootstrap の alert クラスなどを利用するのがおすすめです。

@@ -7,4 +7,5 @@ urlpatterns = [
     path('', home, name='home'),  # ルートURLに home ビューを割り当て
     path('users/', include('users.urls')),  # ユーザー関連のURL
     path('tasks/', include('tasks.urls')),  # タスク関連のURLなど
+    path('notifications/', include('notifications.urls')),
 ]

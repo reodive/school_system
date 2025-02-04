@@ -23,6 +23,9 @@ from users.serializers import UserSerializer  # ← users から正しくイン�
 from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.shortcuts import render, redirect
+from .utils import add_calendar_event
+import datetime
 
 # Logger configuration
 logger = logging.getLogger(__name__)
@@ -100,25 +103,36 @@ def announcement_create(request):
 
 @login_required
 @role_required(allowed_roles=['teacher', 'admin'])
+# tasks/views.py
+
 def create_task(request):
-    """
-    View to create a task (for teachers and admins only)
-    """
     if request.method == 'POST':
-        form = TaskForm(request.POST, request.FILES)
-        if form.is_valid():
-            task = form.save(commit=False)
-            task.created_by = request.user
-            task.save()
-            created_event = add_to_calendar(task)
-            if created_event is None:
-                logger.warning("Failed to register task on Google Calendar.")
-            return redirect('task_list')
-        else:
-            logger.warning(f"TaskForm error: {form.errors}")
-    else:
-        form = TaskForm()
-    return render(request, 'tasks/task_form.html', {'form': form})
+        # フォームからデータを取得する処理（ここでは簡易例）
+        title = request.POST.get('title')
+        deadline_str = request.POST.get('deadline')  # 例: '2025-02-10'
+        description = request.POST.get('description', '')
+        
+        # データベースに課題を保存する処理（省略）
+        # 例: task = Task.objects.create(...)
+
+        # 締切日の文字列を datetime.date に変換
+        deadline_date = datetime.datetime.strptime(deadline_str, '%Y-%m-%d').date()
+        # 終了日は締切日の翌日（全日イベントとして登録）
+        end_date = deadline_date + datetime.timedelta(days=1)
+        
+        # Google Calendar へのイベント登録を呼び出す
+        event = add_calendar_event(
+            title=title,
+            start_date=deadline_date,
+            end_date=end_date,
+            description=description
+        )
+        
+        # 登録完了後のリダイレクト
+        return redirect('task_list')
+    
+    # GETリクエストの場合はフォームを表示する
+    return render(request, 'tasks/create_task.html')
 
 @login_required
 def submit_task(request, task_id):

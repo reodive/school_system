@@ -4,6 +4,46 @@
 {% block title %}ホーム{% endblock %}
 
 {% block content %}
-  <h1>ようこそ、学習支援システムへ！</h1>
-  <p>ここはホーム画面です。</p>
+<div class="text-center py-5" 
+   style="background: url('{% static 'images/hero-bg.jpg' %}') no-repeat center center; background-size: cover;">
+  <div class="bg-overlay" style="background-color: rgba(255, 255, 255, 0.85); padding: 2rem;">
+    <h1 class="display-4">ようこそ、学習支援システムへ！</h1>
+    <p class="lead">あなたの学びをより豊かにする最新のツールがここにあります。</p>
+    <hr class="my-4">
+    <p>シンプルで直感的なデザインで、課題管理からコミュニケーションまでをサポートします。</p>
+    <a class="btn btn-primary btn-lg" href="{% url 'dashboard' %}" role="button">ダッシュボードへ</a>
+  </div>
+</div>
+
+<div class="container my-5">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <img src="{% static 'images/feature1.jpg' %}" class="card-img-top" alt="機能1">
+        <div class="card-body">
+          <h5 class="card-title">直感的なUI</h5>
+          <p class="card-text">Apple風の洗練されたデザインで、操作が簡単に。</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <img src="{% static 'images/feature2.jpg' %}" class="card-img-top" alt="機能2">
+        <div class="card-body">
+          <h5 class="card-title">充実の機能</h5>
+          <p class="card-text">課題管理や進捗確認、グループ表示など、必要な機能が揃っています。</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <img src="{% static 'images/feature3.jpg' %}" class="card-img-top" alt="機能3">
+        <div class="card-body">
+          <h5 class="card-title">安心のセキュリティ</h5>
+          <p class="card-text">ユーザーの役割に応じたアクセス管理で、セキュリティも万全です。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

@@ -1,10 +1,36 @@
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <label for="id_role">ユーザータイプ:</label>
-    <select name="role" id="id_role">
-        <option value="student">生徒</option>
-        <option value="teacher">教師</option>
-    </select>
-    <button type="submit" class="btn btn-success">登録</button>
-</form>
+<!-- templates/signup.html -->
+{% extends "base.html" %}
+
+{% block title %}サインアップ - 学習支援システム{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow-sm my-5">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">サインアップ</h2>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="text-danger small">
+                                {{ field.errors|striptags }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">サインアップ</button>
+                    </div>
+                </form>
+                <div class="text-center mt-3">
+                    <a href="{% url 'login' %}">すでにアカウントをお持ちですか？ ログインはこちら</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

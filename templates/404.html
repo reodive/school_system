@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}ページが見つかりません{% endblock %}
+{% block content %}
+<div class="container text-center my-5">
+  <h1 class="display-4">404</h1>
+  <p class="lead">申し訳ありませんが、要求されたページは存在しません。</p>
+  <a href="{% url 'home' %}" class="btn btn-primary">ホームに戻る</a>
+</div>
+{% endblock %}
