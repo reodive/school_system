@@ -1,8 +1,12 @@
 from django.urls import path
 from . import views
 from .views import TaskDetailAPI, TaskListAPI
+from .views import submit_task
 
 urlpatterns = [
+    # 既存のパスに加えて
+    path('submit/<int:task_id>/', submit_task, name='submit_task'),
+
     # 課題関連
     path('', views.task_list, name='task_list'),  # 課題一覧
     path('tasks/create/', views.create_task, name='create_task'),

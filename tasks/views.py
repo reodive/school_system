@@ -10,6 +10,7 @@ from .models import Task, Announcement
 from users.models import CustomUser
 from .forms import TaskForm, AnnouncementForm, TaskSubmissionForm
 from users.decorators import role_required
+from .models import Task, Submission
 
 # Google API integration
 from google.oauth2 import service_account

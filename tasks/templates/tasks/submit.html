@@ -1,10 +1,61 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
 {% block title %}課題提出{% endblock %}
+
 {% block content %}
-  <h1>{{ task.title }} の提出</h1>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">提出</button>
-  </form>
+<div class="container my-5">
+  <h2 class="mb-4 text-center">課題を提出する</h2>
+  <div class="card shadow-sm p-4">
+    <form method="post" enctype="multipart/form-data" id="submitForm" novalidate>
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="id_comment" class="form-label">コメント (任意)</label>
+        <textarea name="comment" id="id_comment" class="form-control" rows="3" placeholder="課題に関するコメントを入力してください"></textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">ファイルアップロード</label>
+        <div id="dropzone" class="border border-2 border-dashed rounded p-5 text-center">
+          <p class="mb-0">ここにファイルをドラッグ＆ドロップするか、<br>
+          <label for="id_file" class="btn btn-outline-primary mt-2">ファイルを選択</label></p>
+          <input type="file" name="file" id="id_file" class="d-none">
+        </div>
+      </div>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary">提出する</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('id_file');
+
+  dropzone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    dropzone.classList.add('bg-light');
+  });
+
+  dropzone.addEventListener('dragleave', function(e) {
+    e.preventDefault();
+    dropzone.classList.remove('bg-light');
+  });
+
+  dropzone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    dropzone.classList.remove('bg-light');
+    if (e.dataTransfer.files.length) {
+      fileInput.files = e.dataTransfer.files;
+      dropzone.querySelector('p').textContent = e.dataTransfer.files[0].name;
+    }
+  });
+
+  fileInput.addEventListener('change', function() {
+    if (fileInput.files.length) {
+      dropzone.querySelector('p').textContent = fileInput.files[0].name;
+    }
+  });
+</script>
 {% endblock %}

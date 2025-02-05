@@ -2,48 +2,64 @@
 
 {% block title %}課題一覧{% endblock %}
 
+{% block extra_head %}
+<style>
+    .task-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out;
+    }
+    
+    .task-card:hover {
+        transform: translateY(-3px);
+    }
+    
+    .progress-bar {
+        transition: width 0.6s ease-in-out;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container my-4">
-  <h2 class="mb-4">課題一覧</h2>
-  {% if tasks %}
-  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-    {% for task in tasks %}
-    <div class="col">
-      <div class="card h-100 shadow-sm animate-fadeIn">
-        {% if task.image_url %}
-          <img src="{{ task.image_url }}" class="card-img-top" alt="{{ task.title }}">
-        {% else %}
-          <img src="{% static 'images/task-placeholder.jpg' %}" class="card-img-top" alt="課題画像">
-        {% endif %}
-        <div class="card-body">
-          <h5 class="card-title">{{ task.title }}</h5>
-          <p class="card-text">
-            締切：{{ task.deadline }}<br>
-            {% if task.submitted %}
-              <span class="badge bg-success">提出済み</span>
-            {% else %}
-              <span class="badge bg-warning">未提出</span>
-            {% endif %}
-          </p>
-          {% if task.progress %}
-          <div class="progress">
-            <div class="progress-bar" role="progressbar" style="width: {{ task.progress }}%;" aria-valuenow="{{ task.progress }}" aria-valuemin="0" aria-valuemax="100">
-              {{ task.progress }}%
+    <h2 class="mb-3">📌 課題一覧</h2>
+    
+    <div class="row">
+        {% for task in tasks %}
+        <div class="col-md-4">
+            <div class="task-card p-3">
+                <h5 class="mb-2">{{ task.title }}</h5>
+                <p>締切: <strong>{{ task.deadline }}</strong></p>
+                <p>提出済み: <span class="badge bg-success">{{ task.submitted }}</span></p>
+                <p>未提出: <span class="badge bg-warning">{{ task.pending }}</span></p>
+                
+                {% if task.progress is not None %}
+                <div class="progress" style="height: 10px;">
+                    <div class="progress-bar bg-primary" role="progressbar" 
+                        style="width: {{ task.progress|default:0 }}%;" 
+                        aria-valuenow="{{ task.progress|default:0 }}" 
+                        aria-valuemin="0" 
+                        aria-valuemax="100">
+                        {{ task.progress|default:0 }}%
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="mt-3 text-center">
+                    <a href="{% url 'task_detail' task.id %}" class="btn btn-outline-primary btn-sm">詳細を見る</a>
+                </div>
             </div>
-          </div>
-          {% endif %}
         </div>
-        <div class="card-footer text-center">
-          <a href="{% url 'task_detail' task.id %}" class="btn btn-outline-primary btn-sm">詳細を見る</a>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                現在、表示できる課題はありません。
+            </div>
         </div>
-      </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-  </div>
-  {% else %}
-  <div class="alert alert-info" role="alert">
-    現在、表示できる課題はありません。
-  </div>
-  {% endif %}
 </div>
+
 {% endblock %}

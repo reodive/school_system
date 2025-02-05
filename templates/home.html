@@ -1,49 +1,81 @@
-<!-- templates/home.html -->
 {% extends "base.html" %}
+{% load static %}  ← これを追加
 
 {% block title %}ホーム{% endblock %}
 
+{% block extra_head %}
+<style>
+    .hero-section {
+        background: url('/static/images/hero-bg.jpg') no-repeat center center;
+        background-size: cover;
+        position: relative;
+        padding: 5rem 0;
+        text-align: center;
+        color: white;
+    }
+    
+    .hero-overlay {
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 3rem;
+        border-radius: 10px;
+    }
+    
+    .feature-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-3px);
+    }
+    
+    .feature-card img {
+        border-radius: 10px;
+        max-height: 150px;
+        object-fit: cover;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="text-center py-5" 
-   style="background: url('{% static 'images/hero-bg.jpg' %}') no-repeat center center; background-size: cover;">
-  <div class="bg-overlay" style="background-color: rgba(255, 255, 255, 0.85); padding: 2rem;">
-    <h1 class="display-4">ようこそ、学習支援システムへ！</h1>
-    <p class="lead">あなたの学びをより豊かにする最新のツールがここにあります。</p>
-    <hr class="my-4">
-    <p>シンプルで直感的なデザインで、課題管理からコミュニケーションまでをサポートします。</p>
-    <a class="btn btn-primary btn-lg" href="{% url 'dashboard' %}" role="button">ダッシュボードへ</a>
-  </div>
+<div class="hero-section" style="background: url('{% static 'images/hero-bg.jpg' %}') no-repeat center center; background-size: cover;">
+    <div class="container">
+        <div class="hero-overlay">
+            <h1 class="mb-3">ようこそ、学習支援システムへ</h1>
+            <p class="lead">生徒と教師のための効率的な課題管理とコミュニケーションツールを提供します。</p>
+            <a class="btn btn-primary btn-lg mt-3" href="{% url 'dashboard' %}" role="button">ダッシュボードへ</a>
+        </div>
+    </div>
 </div>
 
 <div class="container my-5">
-  <div class="row">
-    <div class="col-md-4">
-      <div class="card shadow-sm">
-        <img src="{% static 'images/feature1.jpg' %}" class="card-img-top" alt="機能1">
-        <div class="card-body">
-          <h5 class="card-title">直感的なUI</h5>
-          <p class="card-text">Apple風の洗練されたデザインで、操作が簡単に。</p>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="feature-card text-center">
+                <img src="{% static 'images/feature1.jpg' %}" class="img-fluid mb-3" alt="機能">
+                <h5 class="card-title">直感的なUI</h5>
+                <p class="card-text">Apple風の洗練されたデザインで、操作が簡単に。</p>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card shadow-sm">
-        <img src="{% static 'images/feature2.jpg' %}" class="card-img-top" alt="機能2">
-        <div class="card-body">
-          <h5 class="card-title">充実の機能</h5>
-          <p class="card-text">課題管理や進捗確認、グループ表示など、必要な機能が揃っています。</p>
+
+        <div class="col-md-4">
+            <div class="feature-card text-center">
+                <img src="{% static 'images/feature2.jpg' %}" class="img-fluid mb-3" alt="機能">
+                <h5 class="card-title">充実の機能</h5>
+                <p class="card-text">課題管理や進捗確認、グループ表示など、必要な機能が揃っています。</p>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card shadow-sm">
-        <img src="{% static 'images/feature3.jpg' %}" class="card-img-top" alt="機能3">
-        <div class="card-body">
-          <h5 class="card-title">安心のセキュリティ</h5>
-          <p class="card-text">ユーザーの役割に応じたアクセス管理で、セキュリティも万全です。</p>
+
+        <div class="col-md-4">
+            <div class="feature-card text-center">
+                <img src="{% static 'images/feature3.jpg' %}" class="img-fluid mb-3" alt="機能">
+                <h5 class="card-title">安心のセキュリティ</h5>
+                <p class="card-text">ユーザーの権限に応じたアクセス管理で、セキュリティも万全です。</p>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 {% endblock %}

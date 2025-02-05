@@ -66,18 +66,9 @@ def user_logout(request):
     logout(request)
     return redirect("home")
 
-
-@login_required
 def dashboard(request):
-    """
-    ユーザーが参加しているグループ情報をもとにダッシュボードを表示するビュー
-    Django 標準の Group とは別に、カスタムグループ（tasks.models.Group）の情報を取得
-    """
-    # Django 標準 Group は request.user.groups.all() で取得可能ですが、
-    # カスタムグループを利用する場合は以下のようにフィルタリング
-    custom_groups = Group.objects.filter(members=request.user)
-    return render(request, 'dashboard.html', {'groups': custom_groups})
-
+    custom_groups = Group.objects.filter(members=request.user)  # 修正
+    return render(request, "users/dashboard.html", {"custom_groups": custom_groups})
 
 @login_required
 def student_dashboard(request):

@@ -1,36 +1,35 @@
-<!-- templates/signup.html -->
 {% extends "base.html" %}
 
 {% block title %}サインアップ - 学習支援システム{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-6 col-lg-4">
-        <div class="card shadow-sm my-5">
-            <div class="card-body">
-                <h2 class="card-title text-center mb-4">サインアップ</h2>
-                <form method="post" novalidate>
-                    {% csrf_token %}
-                    {% for field in form %}
-                    <div class="mb-3">
-                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                        {{ field }}
-                        {% if field.errors %}
-                            <div class="text-danger small">
-                                {{ field.errors|striptags }}
-                            </div>
-                        {% endif %}
-                    </div>
-                    {% endfor %}
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">サインアップ</button>
-                    </div>
-                </form>
-                <div class="text-center mt-3">
-                    <a href="{% url 'login' %}">すでにアカウントをお持ちですか？ ログインはこちら</a>
-                </div>
+  <div class="col-md-6 col-lg-4">
+    <div class="card shadow-sm my-5 animate-fadeIn">
+      <div class="card-body">
+        <h2 class="card-title text-center mb-4">サインアップ</h2>
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {% for field in form %}
+          <div class="mb-3">
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+            <div class="alert alert-danger mt-1">
+              {{ field.errors|striptags }}
             </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">登録する</button>
+          </div>
+        </form>
+        <div class="text-center mt-3">
+          <a href="{% url 'login' %}" class="text-muted">すでにアカウントをお持ちですか？ ログインはこちら</a>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}

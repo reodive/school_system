@@ -1,9 +1,11 @@
 {% extends "base.html" %}
-{% block title %}ログイン{% endblock %}
+
+{% block title %}ログイン - 学習支援システム{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center">
   <div class="col-md-6 col-lg-4">
-    <div class="card shadow-sm my-5">
+    <div class="card shadow-sm my-5 animate-fadeIn">
       <div class="card-body">
         <h2 class="card-title text-center mb-4">ログイン</h2>
         <form method="post" novalidate>
@@ -13,9 +15,9 @@
             <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
             {{ field }}
             {% if field.errors %}
-              <div class="alert alert-danger mt-1">
-                {{ field.errors|striptags }}
-              </div>
+            <div class="alert alert-danger mt-1">
+              {{ field.errors|striptags }}
+            </div>
             {% endif %}
           </div>
           {% endfor %}
@@ -24,7 +26,7 @@
           </div>
         </form>
         <div class="text-center mt-3">
-          <a href="{% url 'signup' %}">まだアカウントがない方はこちら</a>
+          <a href="{% url 'signup' %}" class="text-muted">まだアカウントがない方はこちら</a>
         </div>
       </div>
     </div>
