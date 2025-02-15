@@ -5,10 +5,10 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class Task(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=255)
     description = models.TextField()
-    due_date = models.DateField(null=True, blank=True)
-    
+    deadline = models.DateField(null=True, blank=True)  # ✅ 'due_date' ではなく 'deadline' を使用
+
     STATUS_CHOICES = [
         ('未提出', '未提出'),
         ('提出済み', '提出済み'),
@@ -24,7 +24,8 @@ class Task(models.Model):
     teacher_comment = models.TextField(blank=True)
 
     class Meta:
-        ordering = ['due_date']
+        ordering = ['deadline']  # 'due_date' を 'deadline' に修正
+
 
     def __str__(self):
         return self.title
@@ -39,15 +40,16 @@ class Submission(models.Model):
     def __str__(self):
         return f"Submission by {self.user} for {self.task}"
 
-from django.contrib.auth.models import User
-from django.db import models
-
 class Group(models.Model):
     name = models.CharField(max_length=100)
-    members = models.ManyToManyField(User, related_name="groups")  # 修正
+    members = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, 
+        related_name="custom_user_groups"
+    )
 
     def __str__(self):
         return self.name
+
 
 class Announcement(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='announcements')

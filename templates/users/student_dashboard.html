@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}生徒ダッシュボード{% endblock %}
 
@@ -111,5 +112,14 @@
             }
         }
     });
+<script id="chart-data"
+    data-labels='[{% for task in tasks %}"{{ task.title }}",{% endfor %}]'
+    data-completed='[{% for task in tasks %}{{ task.completed }},{% endfor %}]'
+    data-remaining='[{% for task in tasks %}{{ task.remaining }},{% endfor %}]'>
 </script>
+<script>
+    document.body.dataset.pageType = "student";
+</script>
+<script src="{% static 'js/dashboard.js' %}"></script>
+
 {% endblock %}

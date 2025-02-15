@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}先生ダッシュボード{% endblock %}
 
@@ -48,12 +49,12 @@
                     <p>締切: {{ task.deadline }}</p>
                     <div class="progress" style="height: 10px;">
                         <div class="progress-bar bg-success" role="progressbar" 
-                            style="width: {% if task.submitted + task.pending > 0 %}{{ (task.submitted / (task.submitted + task.pending) * 100)|floatformat:0 }}{% else %}0{% endif %}%;" 
+                            style="width: {{ task.progress|floatformat:0 }}%;" 
                             aria-valuenow="{{ task.submitted }}" 
                             aria-valuemin="0" 
-                            aria-valuemax="{{ task.submitted + task.pending }}">
+                            aria-valuemax="{{ task.total }}">
                         </div>
-                    </div>
+                    </div>                    
                     <p class="mt-2">
                         <span class="badge bg-success">提出済み: {{ task.submitted }}</span>
                         <span class="badge bg-warning">未提出: {{ task.pending }}</span>
@@ -142,5 +143,15 @@
         updateNotifications();
         setInterval(updateNotifications, 60000);
     });
+
+<script id="chart-data"
+    data-labels='[{% for task in tasks %}"{{ task.title }}",{% endfor %}]'
+    data-submitted='[{% for task in tasks %}{{ task.submitted }},{% endfor %}]'
+    data-pending='[{% for task in tasks %}{{ task.pending }},{% endfor %}]'>
 </script>
+<script>
+    document.body.dataset.pageType = "teacher";
+</script>
+<script src="{% static 'js/dashboard.js' %}"></script>
+
 {% endblock %}

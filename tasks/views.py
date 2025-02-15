@@ -6,11 +6,10 @@ from datetime import datetime, timedelta
 from .serializers import TaskSerializer, AnnouncementSerializer  # TaskSerializer was missing
 
 # Importing models, forms, user management, and custom decorators
-from .models import Task, Announcement
+from .models import Task, Announcement, Submission
 from users.models import CustomUser
 from .forms import TaskForm, AnnouncementForm, TaskSubmissionForm
 from users.decorators import role_required
-from .models import Task, Submission
 
 # Google API integration
 from google.oauth2 import service_account
@@ -34,6 +33,10 @@ logger = logging.getLogger(__name__)
 # Google Calendar API settings
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 SERVICE_ACCOUNT_FILE = "credentials.json"
+
+def task_detail(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    return render(request, "tasks/task_detail.html", {"task": task})
 
 @login_required
 
@@ -107,33 +110,18 @@ def announcement_create(request):
 # tasks/views.py
 
 def create_task(request):
-    if request.method == 'POST':
-        # フォームからデータを取得する処理（ここでは簡易例）
-        title = request.POST.get('title')
-        deadline_str = request.POST.get('deadline')  # 例: '2025-02-10'
-        description = request.POST.get('description', '')
-        
-        # データベースに課題を保存する処理（省略）
-        # 例: task = Task.objects.create(...)
+    if request.method == "POST":
+        form = TaskForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "課題が作成されました。")
+            return redirect("task_list")
+        else:
+            messages.error(request, "入力に誤りがあります。修正してください。")
+    else:
+        form = TaskForm()
 
-        # 締切日の文字列を datetime.date に変換
-        deadline_date = datetime.datetime.strptime(deadline_str, '%Y-%m-%d').date()
-        # 終了日は締切日の翌日（全日イベントとして登録）
-        end_date = deadline_date + datetime.timedelta(days=1)
-        
-        # Google Calendar へのイベント登録を呼び出す
-        event = add_calendar_event(
-            title=title,
-            start_date=deadline_date,
-            end_date=end_date,
-            description=description
-        )
-        
-        # 登録完了後のリダイレクト
-        return redirect('task_list')
-    
-    # GETリクエストの場合はフォームを表示する
-    return render(request, 'tasks/create_task.html')
+    return render(request, "tasks/create_task.html", {"form": form})
 
 @login_required
 def submit_task(request, task_id):
@@ -189,6 +177,8 @@ def get(self, request, task_id, format=None):
         task = get_object_or_404(Task, pk=task_id)
         task.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    from django.shortcuts import render
 
 def home(request):
-    return render(request, 'home.html')
+    return render(request, "home.html")

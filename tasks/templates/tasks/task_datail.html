@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}課題詳細{% endblock %}
+
+{% block content %}
+    <h2>{{ task.title }}</h2>
+    <p>{{ task.description }}</p>
+    <p>締切: {{ task.deadline }}</p>
+    <a href="{% url 'task_list' %}" class="btn btn-secondary">戻る</a>
+{% endblock %}

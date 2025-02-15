@@ -2,10 +2,27 @@
 
 {% block content %}
 <h2>新しい課題を作成</h2>
+
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
+    
+    <div class="mb-3">
+        <label for="id_title" class="form-label">タイトル</label>
+        {{ form.title }}
+    </div>
+
+    <div class="mb-3">
+        <label for="id_description" class="form-label">説明</label>
+        {{ form.description }}
+    </div>
+
+    <div class="mb-3">
+        <label for="id_deadline" class="form-label">締切日</label>
+        {{ form.deadline }}
+    </div>
+
     <button type="submit" class="btn btn-primary">作成</button>
 </form>
+
 <a href="{% url 'task_list' %}">戻る</a>
 {% endblock %}
