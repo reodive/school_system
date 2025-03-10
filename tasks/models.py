@@ -8,6 +8,14 @@ class Task(models.Model):
     """
     課題モデル：課題の基本情報や提出状況を管理
     """
+
+    group = models.ForeignKey(
+        'tasks.Group',
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name='tasks'
+    )
+    
     title = models.CharField(max_length=255)
     description = models.TextField()
     deadline = models.DateField(null=True, blank=True)  # ✅ 'due_date' ではなく 'deadline' を使用

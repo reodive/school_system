@@ -4,16 +4,66 @@
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO/SNS用メタタグ -->
+    <meta name="description" content="SmartLearn - 生徒と教師のための効率的な課題管理システム">
+    <meta name="keywords" content="SmartLearn,学習支援,課題管理,通知,ダッシュボード">
+    <meta property="og:title" content="SmartLearn - 学習支援システム">
+    <meta property="og:description" content="生徒と教師のための効率的な課題管理と通知機能を提供するWebシステム">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://smartlearn.example.com/">
+    <meta property="og:image" content="{% static 'images/smartlearn_logo.png' %}">
+
     <title>{% block title %}SmartLearn - 学習支援システム{% endblock %}</title>
+    
+    <!-- Google Fonts / Bootstrap CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+    <!-- カスタムCSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
     <style>
-        html, body {
-            height: 100%;
+        /* 全体レイアウト（サイドバーとメインコンテンツ） */
+        body {
             display: flex;
-            flex-direction: column;
+            min-height: 100vh;
+            flex-direction: row;
+            margin: 0;
+            scroll-behavior: smooth;
         }
+        /* サイドバー */
+        .sidebar {
+            width: 250px;
+            background-color: #f8f9fa;
+            border-right: 1px solid #ddd;
+            padding: 20px;
+            flex-shrink: 0;
+        }
+        .sidebar h4 {
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            margin-bottom: 8px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .sidebar a:hover {
+            background-color: #e9ecef;
+        }
+        /* メインコンテンツ */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        /* ヘッダー（ナビゲーションバー） */
         .navbar-custom {
             background: rgba(255, 255, 255, 0.95);
             border-bottom: 1px solid #ddd;
@@ -46,64 +96,133 @@
             padding: 0.4rem 1rem;
             background: rgba(255, 255, 255, 0.9);
         }
-        main.container {
-            flex: 1;
-            min-height: 100vh;
-            padding-top: 5rem;
-            padding-bottom: 2rem;
+        /* ロゴ画像 */
+        .navbar-brand img {
+            max-height: 40px;
+            margin-right: 8px;
         }
+        /* フッター */
         footer {
             background: #222;
             color: #fff;
             text-align: center;
             padding: 1rem 0;
             font-size: 0.9rem;
+            width: 100%;
             position: relative;
+        }
+        /* メッセージ表示エリア */
+        .message-area {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            z-index: 1050;
+            width: auto;
         }
     </style>
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-custom">
-            <div class="container-fluid">
-                <a class="navbar-brand d-flex align-items-center" href="{% url 'task_list' %}">
-                    <img src="/static/images/smartlearn_logo.png" alt="SmartLearn Logo">
-                        onerror="this.style.display='none'">
-                    <span>SmartLearn</span>
-                </a>                                             
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="メニューを切り替え">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        {% if user.is_authenticated %}
-                            {% if user.role == "teacher" or user.role == "admin" %}
-                                <li class="nav-item"><a class="nav-link" href="{% url 'create_task' %}">✏️ 課題作成</a></li>
-                            {% elif user.role == "student" %}
-                                <li class="nav-item"><a class="nav-link" href="{% url 'task_list' %}">📂 課題一覧</a></li>
-                            {% endif %}
-                            <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">📊 ダッシュボード</a></li>
-                            <li class="nav-item"><a class="nav-link text-danger" href="{% url 'logout' %}">🚪 ログアウト</a></li>
-                        {% else %}
-                            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">🔑 ログイン</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">📝 サインアップ</a></li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+    <!-- サイドバー -->
+    <div class="sidebar">
+        <h4>メニュー</h4>
+        <a href="{% url 'home' %}"><i class="bi bi-house-door"></i> ホーム</a>
+        <a href="{% url 'task_list' %}"><i class="bi bi-folder2-open"></i> 課題一覧</a>
+        <a href="{% url 'dashboard' %}"><i class="bi bi-bar-chart"></i> ダッシュボード</a>
+        <a href="{% url 'announcement_list' %}"><i class="bi bi-megaphone"></i> お知らせ</a>
+        <!-- 追加項目例 -->
+        <a href="#"><i class="bi bi-chat-dots"></i> チャット</a>
+        <a href="#"><i class="bi bi-calendar"></i> カレンダー</a>
+        <a href="#"><i class="bi bi-person-lines-fill"></i> アカウント</a>
+    </div>
 
-    <main class="container">
+    <!-- メインコンテンツ -->
+    <div class="main-content">
+        <!-- ヘッダー（ナビゲーションバー） -->
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-custom">
+                <div class="container-fluid">
+                    <a class="navbar-brand d-flex align-items-center" href="{% url 'task_list' %}">
+                        <img src="{% static 'images/smartlearn_logo.png' %}" alt="SmartLearn Logo" onerror="this.style.display='none'">
+                        <span>SmartLearn</span>
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarNav" aria-controls="navbarNav"
+                            aria-expanded="false" aria-label="メニューを切り替え">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                            {% if user.is_authenticated %}
+                                {% if user.role == "teacher" or user.role == "admin" %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'create_task' %}">
+                                            <i class="bi bi-pencil-square"></i> 課題作成
+                                        </a>
+                                    </li>
+                                {% elif user.role == "student" %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'task_list' %}">
+                                            <i class="bi bi-folder2-open"></i> 課題一覧
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'dashboard' %}">
+                                        <i class="bi bi-bar-chart"></i> ダッシュボード
+                                    </a>
+                                </li>
+                                <li class="nav-item d-flex align-items-center mx-2 text-muted">
+                                    <small>こんにちは、{{ user.username }} さん</small>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-danger" href="{% url 'logout' %}">
+                                        <i class="bi bi-door-open"></i> ログアウト
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'login' %}">
+                                        <i class="bi bi-key"></i> ログイン
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'signup' %}">
+                                        <i class="bi bi-person-plus"></i> サインアップ
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- メッセージ表示エリア -->
+        <div class="message-area">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- コンテンツエリア -->
         {% block content %}{% endblock %}
-    </main>
+    </div>
 
     <footer>
         &copy; {% now "Y" %} SmartLearn - すべての権利を保有
     </footer>
 
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- ナビゲーションバーの縮小効果 -->
     <script>
         window.addEventListener('scroll', function() {
             let navbar = document.querySelector('.navbar-custom');
@@ -114,6 +233,7 @@
             }
         });
     </script>
+
     {% block extra_js %}{% endblock %}
 </body>
 </html>

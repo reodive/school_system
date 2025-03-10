@@ -1,65 +1,99 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}課題一覧{% endblock %}
 
 {% block extra_head %}
 <style>
-    .task-card {
-        background: white;
+    .task-list-container {
+        background: #f9f9f9;
         border-radius: 10px;
         padding: 20px;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s ease-in-out;
     }
-    
-    .task-card:hover {
+    .task-item {
+        background: #fff;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 10px;
+        transition: transform 0.2s ease;
+    }
+    .task-item:hover {
         transform: translateY(-3px);
-    }
-    
-    .progress-bar {
-        transition: width 0.6s ease-in-out;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <h2 class="mb-3">📌 課題一覧</h2>
-    
-    <div class="row">
-        {% for task in tasks %}
-        <div class="col-md-4">
-            <div class="task-card p-3">
-                <h5 class="mb-2">{{ task.title }}</h5>
-                <p>締切: <strong>{{ task.deadline }}</strong></p>
-                <p>提出済み: <span class="badge bg-success">{{ task.submitted }}</span></p>
-                <p>未提出: <span class="badge bg-warning">{{ task.pending }}</span></p>
-                
-                {% if task.progress is not None %}
-                <div class="progress" style="height: 10px;">
-                    <div class="progress-bar bg-primary" role="progressbar" 
-                        style="width: {{ task.progress|default:0 }}%;" 
-                        aria-valuenow="{{ task.progress|default:0 }}" 
-                        aria-valuemin="0" 
-                        aria-valuemax="100">
-                        {{ task.progress|default:0 }}%
-                    </div>
-                </div>
-                {% endif %}
-
-                <div class="mt-3 text-center">
-                    <a href="{% url 'task_detail' task.id %}" class="btn btn-outline-primary btn-sm">詳細を見る</a>
-                </div>
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2 class="mb-3">課題一覧</h2>
+        <!-- 検索、グループ、並べ替えのフォーム -->
+        <form method="GET" class="row g-3 mb-3">
+            <div class="col-auto">
+                <input type="text" name="q" class="form-control" placeholder="キーワード検索" value="{{ query|default_if_none:'' }}">
             </div>
-        </div>
-        {% empty %}
-        <div class="col-12">
-            <div class="alert alert-info text-center">
-                現在、表示できる課題はありません。
+            <div class="col-auto">
+                <select name="group" class="form-select" onchange="this.form.submit()">
+                    <option value="">-- グループを選択 --</option>
+                    {% for grp in groups %}
+                        <option value="{{ grp.id }}" {% if grp.id|stringformat:"s" == current_group %}selected{% endif %}>{{ grp.name }}</option>
+                    {% endfor %}
+                </select>
             </div>
-        </div>
-        {% endfor %}
+            <div class="col-auto">
+                <select name="sort" class="form-select" onchange="this.form.submit()">
+                    <option value="deadline" {% if sort_by == 'deadline' %}selected{% endif %}>締切日順</option>
+                    <option value="title" {% if sort_by == 'title' %}selected{% endif %}>タイトル順</option>
+                    <option value="priority" {% if sort_by == 'priority' %}selected{% endif %}>優先度順</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">検索</button>
+            </div>
+        </form>
     </div>
 </div>
 
+<div class="task-list-container">
+    {% for task in page_obj %}
+    <div class="task-item">
+        <h5>{{ task.title }}</h5>
+        <p class="mb-1">締切: <strong>{{ task.deadline }}</strong></p>
+        <p class="mb-1">優先度: {{ task.priority }}</p>
+        <p class="mb-1">ステータス: {{ task.status }}</p>
+        {% if task.group %}
+            <p class="mb-1">グループ: {{ task.group.name }}</p>
+        {% endif %}
+        <a href="{% url 'task_detail' task.id %}" class="btn btn-sm btn-outline-secondary">詳細</a>
+    </div>
+    {% empty %}
+    <div class="alert alert-info">
+        課題がありません。
+    </div>
+    {% endfor %}
+</div>
+
+<!-- ページネーション -->
+<div class="mt-3">
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&sort={{ sort_by }}&group={{ current_group }}&q={{ query }}">前へ</a>
+                </li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}&sort={{ sort_by }}&group={{ current_group }}&q={{ query }}">{{ num }}</a>
+                </li>
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&sort={{ sort_by }}&group={{ current_group }}&q={{ query }}">次へ</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
 {% endblock %}
