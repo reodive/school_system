@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}{{ group.name }} の名簿{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ group.name }} の名簿</h2>
+    <hr>
+    {% if roster %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>生徒名</th>
+                    <th>提出済み / 全課題</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in roster %}
+                <tr>
+                    <td>{{ item.member.username }}</td>
+                    <td>{{ item.submitted_count }} / {{ item.total_count }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>グループにメンバーがいません。</p>
+    {% endif %}
+</div>
+{% endblock %}

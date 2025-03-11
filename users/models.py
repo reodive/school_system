@@ -2,6 +2,7 @@
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.conf import settings
 
 class CustomUser(AbstractUser):
     ROLE_CHOICES = (
@@ -13,3 +14,22 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
+
+class NotificationSetting(models.Model):
+    """
+    ユーザーごとの通知設定を管理するモデル
+    """
+    NOTIF_CHOICES = (
+        ('on', 'ON'),
+        ('off', 'OFF'),
+    )
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='notification_setting')
+    # 各通知項目: 課題リマインダー、チャット、アナウンス
+    assignment_reminder = models.CharField(max_length=3, choices=NOTIF_CHOICES, default='on')
+    chat_notification = models.CharField(max_length=3, choices=NOTIF_CHOICES, default='on')
+    announcement_notification = models.CharField(max_length=3, choices=NOTIF_CHOICES, default='on')
+    # 各通知の頻度（例：分、時間単位のオプションなど）
+    reminder_frequency = models.IntegerField(default=24)  # 例: 24時間前通知
+
+    def __str__(self):
+        return f"{self.user.username} の通知設定"

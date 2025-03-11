@@ -18,30 +18,32 @@
     <!-- Google Fonts / Bootstrap CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    
     <!-- カスタムCSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     
     <style>
-        /* 全体レイアウト：縦方向に並べる */
+        /* ベース設定 */
+        * { box-sizing: border-box; }
         body {
-            display: flex;
-            flex-direction: column; /* ヘッダー→中央領域→フッターを縦に配置 */
-            min-height: 100vh;      /* 画面全体の高さを確保 */
             margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             scroll-behavior: smooth;
+            background-color: #f5f5f5;
         }
-        /* ヘッダー（ナビゲーションバー） */
+        /* ヘッダー */
         header {
-            flex-shrink: 0; /* ヘッダーの高さを固定 */
+            flex-shrink: 0;
         }
         .navbar-custom {
             background: rgba(255, 255, 255, 0.95);
             border-bottom: 1px solid #ddd;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             width: 100%;
             transition: background 0.3s ease-in-out;
         }
@@ -60,36 +62,33 @@
         }
         .navbar-custom .nav-link:hover {
             color: #000;
-            background: rgba(0, 0, 0, 0.05);
+            background: rgba(0,0,0,0.05);
             border-radius: 5px;
-        }
-        .navbar-custom.shrink {
-            padding: 0.4rem 1rem;
-            background: rgba(255, 255, 255, 0.9);
         }
         .navbar-brand img {
             max-height: 40px;
             margin-right: 8px;
         }
-
-        /* 中央領域（サイドバー＋メイン） */
+        /* 中央領域：サイドバー＋メインコンテンツ */
         .middle-area {
-            display: flex;      /* 横方向にサイドバーとメインを並べる */
-            flex: 1;            /* 余った高さをここで埋める */
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
         }
         /* サイドバー */
-        .sidebar {
+        aside.sidebar {
             width: 250px;
             background-color: #f8f9fa;
             border-right: 1px solid #ddd;
             padding: 20px;
-            flex-shrink: 0;     /* 横幅を固定 */
+            flex-shrink: 0;
         }
-        .sidebar h4 {
+        aside.sidebar h4 {
             margin-top: 0;
             margin-bottom: 20px;
         }
-        .sidebar a {
+        aside.sidebar a {
             display: block;
             padding: 10px;
             margin-bottom: 8px;
@@ -98,22 +97,23 @@
             border-radius: 4px;
             transition: background 0.2s;
         }
-        .sidebar a:hover {
+        aside.sidebar a:hover {
             background-color: #e9ecef;
         }
         /* メインコンテンツ */
-        .main-content {
-            flex: 1;            /* サイドバー以外の横幅をすべて使う */
+        main.main-content {
+            flex: 1;
             padding: 20px;
+            background-color: #fff;
+            overflow-y: auto;
         }
         /* フッター */
         footer {
-            flex-shrink: 0;     /* フッターの高さを固定 */
+            flex-shrink: 0;
             background: #222;
             color: #fff;
             text-align: center;
             padding: 1rem 0;
-            font-size: 0.9rem;
             width: 100%;
         }
         /* メッセージ表示エリア */
@@ -123,6 +123,17 @@
             right: 20px;
             z-index: 1050;
             width: auto;
+        }
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .middle-area {
+                flex-direction: column;
+            }
+            aside.sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #ddd;
+            }
         }
     </style>
     {% block extra_head %}{% endblock %}
@@ -141,7 +152,6 @@
                         aria-expanded="false" aria-label="メニューを切り替え">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         {% if user.is_authenticated %}
@@ -167,9 +177,12 @@
                                 <small>こんにちは、{{ user.username }} さん</small>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-danger" href="{% url 'logout' %}">
-                                    <i class="bi bi-door-open"></i> ログアウト
-                                </a>
+                                <form action="{% url 'logout' %}" method="POST" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-link nav-link p-0" style="border: none;">
+                                        <i class="bi bi-door-open"></i> ログアウト
+                                    </button>
+                                </form>
                             </li>
                         {% else %}
                             <li class="nav-item">
@@ -189,23 +202,27 @@
         </nav>
     </header>
 
-    <!-- 中央領域：サイドバー＋メインコンテンツ -->
+    <!-- 中央領域 -->
     <div class="middle-area">
         <!-- サイドバー -->
-        <div class="sidebar">
+        <aside class="sidebar">
             <h4>メニュー</h4>
             <a href="{% url 'home' %}"><i class="bi bi-house-door"></i> ホーム</a>
             <a href="{% url 'task_list' %}"><i class="bi bi-folder2-open"></i> 課題一覧</a>
             <a href="{% url 'dashboard' %}"><i class="bi bi-bar-chart"></i> ダッシュボード</a>
             <a href="{% url 'announcement_list' %}"><i class="bi bi-megaphone"></i> お知らせ</a>
             <!-- 追加項目例 -->
-            <a href="#"><i class="bi bi-chat-dots"></i> チャット</a>
-            <a href="#"><i class="bi bi-calendar"></i> カレンダー</a>
-            <a href="#"><i class="bi bi-person-lines-fill"></i> アカウント</a>
-        </div>
+            <!-- サイドバーにカレンダーリンクを追加 -->
+            <a href="{% url 'group_stream' group.id %}"><i class="bi bi-clock-history"></i> 生徒グループ</a>
+            <a href="{% url 'group_roster' group.id %}"><i class="bi bi-people"></i> グループ名簿</a>
+            <a href="{% url 'teacher_dashboard' %}"><i class="bi bi-graph-up"></i> 教科別課題</a>
+            <a href="{% url 'calendar_view' %}"><i class="bi bi-calendar"></i> カレンダー</a>
+            <a href="{% url 'message_list' %}"><i class="bi bi-chat-dots"></i> チャット</a>  
+            <a href="{% url 'profile_settings' %}"><i class="bi bi-person-lines-fill"></i> アカウント設定</a>
+        </aside>
 
         <!-- メインコンテンツ -->
-        <div class="main-content">
+        <main class="main-content">
             <!-- メッセージ表示エリア -->
             <div class="message-area">
                 {% if messages %}
@@ -217,10 +234,9 @@
                     {% endfor %}
                 {% endif %}
             </div>
-
             <!-- コンテンツブロック -->
             {% block content %}{% endblock %}
-        </div>
+        </main>
     </div>
 
     <!-- フッター -->
@@ -230,11 +246,10 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
     <!-- ナビゲーションバーの縮小効果 -->
     <script>
         window.addEventListener('scroll', function() {
-            let navbar = document.querySelector('.navbar-custom');
+            const navbar = document.querySelector('.navbar-custom');
             if (window.scrollY > 50) {
                 navbar.classList.add('shrink');
             } else {
@@ -242,7 +257,6 @@
             }
         });
     </script>
-
     {% block extra_js %}{% endblock %}
 </body>
 </html>

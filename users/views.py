@@ -13,12 +13,33 @@ from rest_framework.permissions import IsAuthenticated
 # フォーム、シリアライザ、モデルのインポート
 from .forms import CustomUserCreationForm, CustomAuthenticationForm
 from .serializers import UserSerializer
-from .models import CustomUser  # 必要に応じて
-from tasks.models import Task  # 課題モデル（必要なら追加）
-# グループ情報を利用する場合は、グループモデルをインポート（例: tasks.models.Group）
-from tasks.models import Group  # ※ Group モデルが tasks アプリにある場合
+from .models import CustomUser
+from tasks.models import Task 
+from tasks.models import Group
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from .forms import ProfileUpdateForm
+from .forms import NotificationSettingForm
+from .models import NotificationSetting
+
+@login_required
+def notification_settings(request):
+    """
+    ユーザーごとの通知設定を表示・更新するビュー
+    """
+    # ユーザーに対して通知設定がなければ作成
+    notif_setting, created = NotificationSetting.objects.get_or_create(user=request.user)
+    if request.method == "POST":
+        form = NotificationSettingForm(request.POST, instance=notif_setting)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "通知設定が更新されました。")
+            return redirect("notification_settings")
+        else:
+            messages.error(request, "入力内容に誤りがあります。")
+    else:
+        form = NotificationSettingForm(instance=notif_setting)
+    return render(request, "users/notification_settings.html", {"form": form})
 
 class UserProfileAPI(APIView):
     """
@@ -154,3 +175,22 @@ def teacher_dashboard(request):
         'activities': activities,
     }
     return render(request, 'users/teacher_dashboard.html', context)
+
+@login_required
+def profile_settings(request):
+    """
+    ユーザーのプロフィールを更新するビュー。
+    POSTで送信された場合はフォームをバリデーションし、更新。
+    GETの場合は現在のユーザー情報をフォームにセットして表示。
+    """
+    if request.method == "POST":
+        form = ProfileUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "プロフィールが更新されました。")
+            return redirect("profile_settings")
+        else:
+            messages.error(request, "入力内容に誤りがあります。")
+    else:
+        form = ProfileUpdateForm(instance=request.user)
+    return render(request, "users/profile_settings.html", {"form": form})

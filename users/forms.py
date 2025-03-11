@@ -2,6 +2,17 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import CustomUser
+from .models import NotificationSetting
+
+class NotificationSettingForm(forms.ModelForm):
+    class Meta:
+        model = NotificationSetting
+        fields = ['assignment_reminder', 'chat_notification', 'announcement_notification', 'reminder_frequency']
+        
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ["username", "email", "first_name", "last_name"]
 
 # カスタムログインフォーム
 class CustomAuthenticationForm(AuthenticationForm):
@@ -38,7 +49,6 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        # CustomUser に合わせたフィールド設定。role フィールドは選択肢になっている想定です。
         fields = ('username', 'email', 'role', 'password1', 'password2')
     
     def __init__(self, *args, **kwargs):

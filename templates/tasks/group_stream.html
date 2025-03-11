@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}{{ group.name }} のクラスルームストリーム{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ group.name }} - クラスルームストリーム</h2>
+    <hr>
+    {% if stream_items %}
+        {% for item in stream_items %}
+            {% if item.type == 'announcement' %}
+                <div class="card mb-3">
+                    <div class="card-header bg-info text-white">
+                        お知らせ: {{ item.title }}
+                    </div>
+                    <div class="card-body">
+                        <p>{{ item.content }}</p>
+                        <small>投稿者: {{ item.user.username }} / 投稿日: {{ item.created_at|date:"Y-m-d H:i" }}</small>
+                    </div>
+                </div>
+            {% elif item.type == 'submission' %}
+                <div class="card mb-3">
+                    <div class="card-header bg-success text-white">
+                        課題提出: {{ item.task_title }}
+                    </div>
+                    <div class="card-body">
+                        {% if item.comment %}
+                            <p>コメント: {{ item.comment }}</p>
+                        {% endif %}
+                        {% if item.file %}
+                            <p>ファイル: <a href="{{ item.file }}" target="_blank">ダウンロード</a></p>
+                        {% endif %}
+                        <small>提出者: {{ item.user.username }} / 提出日時: {{ item.created_at|date:"Y-m-d H:i" }}</small>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <p>まだグループ内の活動はありません。</p>
+    {% endif %}
+</div>
+{% endblock %}

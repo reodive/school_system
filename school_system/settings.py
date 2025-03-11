@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'tasks',  # ✅ tasks アプリ
     'users',  # ✅ users アプリ (ない場合は追加する)
+    'dm',
 ]
 
 MIDDLEWARE = [

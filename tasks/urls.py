@@ -18,8 +18,13 @@ urlpatterns = [
 
     # グループごとの課題一覧（例: 特定グループの課題一覧を表示）
     path("groups/<int:group_id>/tasks/", views.task_list, name="group_task_list"),
+    path('group/<int:group_id>/announcements/', views.announcement_list, name='announcement_list'),
+    path('group/<int:group_id>/announcements/create/', views.announcement_create, name='announcement_create'),
+    path('group/<int:group_id>/stream/', views.group_stream, name='group_stream'),
 
     # REST API
     path("api/tasks/", TaskListAPI.as_view(), name="task_list_api"),
     path("api/tasks/<int:task_id>/", TaskDetailAPI.as_view(), name="task_detail_api"),
+    path('group/<int:group_id>/roster/', views.group_roster, name='group_roster'),
+    path('teacher_dashboard/', views.teacher_dashboard, name='teacher_dashboard'),
 ]

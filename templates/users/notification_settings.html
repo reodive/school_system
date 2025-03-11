@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}通知設定{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2>通知設定</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">設定を更新する</button>
+    </form>
+</div>
+{% endblock %}

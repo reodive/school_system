@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}教師用タスク・グループダッシュボード{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>教師用ダッシュボード</h2>
+    <hr>
+
+    <!-- 教科別課題一覧 -->
+    <section>
+        <h3>教科別課題一覧</h3>
+        {% if tasks_by_subject %}
+            {% for subject, tasks in tasks_by_subject.items %}
+                <h4>{{ subject }}</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>課題名</th>
+                            <th>締切</th>
+                            <th>状態</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for task in tasks %}
+                        <tr>
+                            <td>{{ task.title }}</td>
+                            <td>{{ task.deadline|date:"Y-m-d" }}</td>
+                            <td>{{ task.status }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endfor %}
+        {% else %}
+            <p>表示する課題はありません。</p>
+        {% endif %}
+    </section>
+
+    <hr>
+
+    <!-- グループ情報一覧 -->
+    <section>
+        <h3>グループ情報</h3>
+        {% if groups_info %}
+            <ul class="list-group">
+                {% for info in groups_info %}
+                    <li class="list-group-item">
+                        {{ info.group.name }} (メンバー: {{ info.member_count }} 人)
+                        <a href="{% url 'group_roster' info.group.id %}" class="btn btn-sm btn-primary float-end">名簿を表示</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>登録されているグループはありません。</p>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

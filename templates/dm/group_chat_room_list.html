@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}グループチャットルーム一覧{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>グループチャットルーム一覧</h2>
+    <hr>
+    {% if rooms %}
+        <ul class="list-group">
+            {% for room in rooms %}
+                <li class="list-group-item">
+                    <a href="{% url 'group_chat_room_detail' room.id %}">{{ room.name }}</a>
+                    <small class="text-muted">作成日: {{ room.created_at|date:"Y-m-d" }}</small>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>参加しているチャットルームはありません。</p>
+    {% endif %}
+</div>
+{% endblock %}

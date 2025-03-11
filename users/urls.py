@@ -38,4 +38,6 @@ urlpatterns = [
 
     # Notifications
     path('notifications/', get_notifications, name='get_notifications'),
+    path('settings/', views.profile_settings, name='profile_settings'),
+    path('settings/notifications/', views.notification_settings, name='notification_settings'),    
 ]

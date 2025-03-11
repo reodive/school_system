@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>メッセージ一覧</h2>
+<p>やり取りしているユーザーの一覧です。クリックすると詳細画面に移動します。</p>
+<hr>
+{% if users %}
+  <ul>
+    {% for u in users %}
+      <li>
+        <a href="{% url 'message_detail' u.id %}">{{ u.username }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>メッセージのやり取りがありません。</p>
+{% endif %}
+{% endblock %}

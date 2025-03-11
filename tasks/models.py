@@ -9,12 +9,7 @@ class Task(models.Model):
     課題モデル：課題の基本情報や提出状況を管理
     """
 
-    group = models.ForeignKey(
-        'tasks.Group',
-        on_delete=models.SET_NULL,
-        null=True, blank=True,
-        related_name='tasks'
-    )
+    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True, related_name="tasks")
     
     title = models.CharField(max_length=255)
     description = models.TextField()
@@ -27,15 +22,9 @@ class Task(models.Model):
         ('再提出', '再提出'),
         ('完了', '完了'),
     ]
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='未提出')
+    status = models.CharField(max_length=10, choices=[('未提出', '未提出'), ('提出済み', '提出済み'), ('添削中', '添削中'), ('再提出', '再提出'), ('完了', '完了')], default='未提出')
     submission_file = models.FileField(upload_to='submissions/', null=True, blank=True)
-
-    # 課題を作成したユーザー（通常は教師か管理者）
-    created_by = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='tasks'
-    )
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='tasks')
 
     # 課題が割り当てられたユーザー（生徒）を管理したい場合
     assigned_to = models.ForeignKey(
@@ -104,21 +93,22 @@ class Submission(models.Model):
 
 class Group(models.Model):
     """
-    グループモデル：クラスや学年などのグループを管理
+    学生グループやクラスを管理するモデル
     """
     name = models.CharField(max_length=100)
+    # 例: グループのメンバー
     members = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
-        related_name="custom_user_groups"
+        related_name="custom_user_groups",
+        blank=True
     )
 
     def __str__(self):
         return self.name
-
-
+    
 class Announcement(models.Model):
     """
-    お知らせモデル：グループごとのお知らせを管理
+    グループ向けのお知らせやアナウンスを管理するモデル
     """
     group = models.ForeignKey(
         Group,
@@ -134,7 +124,7 @@ class Announcement(models.Model):
     )
 
     def __str__(self):
-        return self.title
+        return f"{self.title} ({self.group.name})"
 
 
 class Feedback(models.Model):
