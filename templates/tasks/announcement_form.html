@@ -1,10 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>{{ group.name }} にお知らせ投稿</h2>
-
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-success">投稿</button>
-</form>
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header bg-primary text-white">
+      <h2 class="mb-0">{{ group.name }} にお知らせ投稿</h2>
+    </div>
+    <div class="card-body">
+      <form method="POST" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="text-end">
+          <button type="submit" class="btn btn-success">投稿する</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}
