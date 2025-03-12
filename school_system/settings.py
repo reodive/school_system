@@ -36,6 +36,9 @@ INSTALLED_APPS = [
     'tasks',  # ✅ tasks アプリ
     'users',  # ✅ users アプリ (ない場合は追加する)
     'dm',
+    'calendarapp',  
+    'notes',      # ノート機能用
+    'lessons',  
 ]
 
 MIDDLEWARE = [
@@ -46,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'users.middleware.LoginHistoryMiddleware',
 ]
 
 ROOT_URLCONF = 'school_system.urls'
@@ -158,3 +162,5 @@ GOOGLE_CREDENTIALS_FILE = os.path.join(BASE_DIR, 'google_credentials.json')
 GOOGLE_CALENDAR_ID = 'your_calendar_id@group.calendar.google.com'
 # school_system/settings.py の末尾付近
 LOGOUT_REDIRECT_URL = '/users/login/'
+
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'your_default_api_key')

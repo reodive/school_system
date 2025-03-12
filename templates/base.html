@@ -37,9 +37,7 @@
             background-color: #f5f5f5;
         }
         /* ヘッダー */
-        header {
-            flex-shrink: 0;
-        }
+        header { flex-shrink: 0; }
         .navbar-custom {
             background: rgba(255, 255, 255, 0.95);
             border-bottom: 1px solid #ddd;
@@ -211,15 +209,18 @@
             <a href="{% url 'task_list' %}"><i class="bi bi-folder2-open"></i> 課題一覧</a>
             <a href="{% url 'dashboard' %}"><i class="bi bi-bar-chart"></i> ダッシュボード</a>
             <a href="{% url 'announcement_list' %}"><i class="bi bi-megaphone"></i> お知らせ</a>
-            <!-- 追加項目例 -->
-            <!-- サイドバーにカレンダーリンクを追加 -->
-            <a href="{% url 'group_stream' group.id %}"><i class="bi bi-clock-history"></i> 生徒グループ</a>
-            <a href="{% url 'group_roster' group.id %}"><i class="bi bi-people"></i> グループ名簿</a>
+            {% if group %}
+                <a href="{% url 'group_stream' group.id %}"><i class="bi bi-clock-history"></i> 生徒グループ</a>
+                <a href="{% url 'group_roster' group.id %}"><i class="bi bi-people"></i> グループ名簿</a>
+            {% else %}
+                <a href="{% url 'group_selection' %}"><i class="bi bi-people"></i> グループ選択</a>
+            {% endif %}
             <a href="{% url 'teacher_dashboard' %}"><i class="bi bi-graph-up"></i> 教科別課題</a>
             <a href="{% url 'calendar_view' %}"><i class="bi bi-calendar"></i> カレンダー</a>
             <a href="{% url 'message_list' %}"><i class="bi bi-chat-dots"></i> チャット</a>  
+            <a href="{% url 'group_chat_room_list' %}"><i class="bi bi-people"></i> グループチャット</a>
             <a href="{% url 'profile_settings' %}"><i class="bi bi-person-lines-fill"></i> アカウント設定</a>
-        </aside>
+        </aside>        
 
         <!-- メインコンテンツ -->
         <main class="main-content">

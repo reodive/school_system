@@ -21,6 +21,35 @@ from django.contrib.auth.decorators import login_required
 from .forms import ProfileUpdateForm
 from .forms import NotificationSettingForm
 from .models import NotificationSetting
+from django.contrib.auth import update_session_auth_hash
+from django.shortcuts import redirect
+from .forms import CustomPasswordChangeForm
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+
+@login_required
+def login_history(request):
+    histories = request.user.login_histories.order_by('-login_time')
+    return render(request, 'users/login_history.html', {'histories': histories})
+
+@login_required
+def change_password(request):
+    """
+    独自パスワード変更ビュー
+    """
+    if request.method == "POST":
+        form = CustomPasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            # セッション内の認証情報を更新（変更後もログイン状態を維持）
+            update_session_auth_hash(request, user)
+            messages.success(request, "パスワードが変更されました。")
+            return redirect('profile_settings')  # 例：アカウント設定ページへ
+        else:
+            messages.error(request, "エラーがあります。入力内容を確認してください。")
+    else:
+        form = CustomPasswordChangeForm(user=request.user)
+    return render(request, 'users/change_password.html', {'form': form})
 
 @login_required
 def notification_settings(request):

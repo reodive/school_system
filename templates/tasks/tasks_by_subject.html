@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}教科別課題一覧{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>教科別課題一覧</h2>
+    {% if tasks_by_subject %}
+        {% for subject, tasks in tasks_by_subject.items %}
+            <h3>{{ subject }}</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>課題名</th>
+                        <th>締切</th>
+                        <th>状態</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                    <tr>
+                        <td>{{ task.title }}</td>
+                        <td>{{ task.deadline|date:"Y-m-d" }}</td>
+                        <td>{{ task.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}
+    {% else %}
+        <p>表示する課題はありません。</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -28,6 +28,13 @@ from users.decorators import role_required
 from users.serializers import UserSerializer
 from .serializers import TaskSerializer, AnnouncementSerializer
 
+def group_selection(request):
+    """
+    ユーザーが所属するグループを選択するためのビュー。
+    """
+    groups = Group.objects.all()  # またはユーザーに関連するグループに絞る
+    return render(request, 'tasks/group_selection.html', {'groups': groups})
+
 # Google Calendar API settings
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 SERVICE_ACCOUNT_FILE = "credentials.json"
@@ -364,3 +371,20 @@ def tasks_dashboard(request):
         'groups_info': groups_info,
     }
     return render(request, 'tasks/teacher_dashboard.html', context)
+
+@login_required
+@role_required(allowed_roles=['teacher', 'admin'])
+def tasks_by_subject(request):
+    """
+    全タスクを教科ごとに分類して表示するビュー。
+    教科ごとの進捗や提出状況の確認に利用します。
+    """
+    tasks = Task.objects.all().order_by('subject', 'deadline')
+    tasks_by_subject = {}
+    for task in tasks:
+        subject = task.subject if task.subject else "未設定"
+        tasks_by_subject.setdefault(subject, []).append(task)
+    context = {
+        'tasks_by_subject': tasks_by_subject,
+    }
+    return render(request, 'tasks/tasks_by_subject.html', context)

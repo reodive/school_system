@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}ノート詳細{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ note.title }}</h2>
+    <div id="note-content">
+        {{ note.content|safe }}
+    </div>
+    <a href="{% url 'edit_note' note.id %}" class="btn btn-primary">編集</a>
+</div>
+{% endblock %}
+s

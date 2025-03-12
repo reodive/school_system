@@ -3,6 +3,24 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import CustomUser
 from .models import NotificationSetting
+from django.contrib.auth.forms import PasswordChangeForm
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+    """
+    パスワード変更フォーム。見た目やラベルをカスタマイズ可能
+    """
+    old_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': '現在のパスワード'}),
+        label="現在のパスワード"
+    )
+    new_password1 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': '新しいパスワード'}),
+        label="新しいパスワード"
+    )
+    new_password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': '新しいパスワード（確認）'}),
+        label="新しいパスワード（確認）"
+    )
 
 class NotificationSettingForm(forms.ModelForm):
     class Meta:

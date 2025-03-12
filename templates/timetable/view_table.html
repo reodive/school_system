@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}時間割{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>あなたの時間割</h2>
+    {% if entries %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>曜日</th>
+                    <th>授業名</th>
+                    <th>開始時間</th>
+                    <th>終了時間</th>
+                    <th>担当教師</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in entries %}
+                    <tr>
+                        <td>{{ entry.get_day_display }}</td>
+                        <td>{{ entry.class_name }}</td>
+                        <td>{{ entry.start_time }}</td>
+                        <td>{{ entry.end_time }}</td>
+                        <td>{{ entry.teacher }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>まだ時間割が設定されていません。</p>
+    {% endif %}
+</div>
+{% endblock %}

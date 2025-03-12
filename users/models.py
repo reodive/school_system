@@ -4,6 +4,18 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
 
+class LoginHistory(models.Model):
+    """
+    ユーザーのログイン履歴を記録するモデル
+    """
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='login_histories')
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    user_agent = models.TextField(null=True, blank=True)
+    login_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.login_time}"
+
 class CustomUser(AbstractUser):
     ROLE_CHOICES = (
         ('student', '生徒'),

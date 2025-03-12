@@ -66,6 +66,12 @@
                         </div>
                     </div>
                 </div>
+            
+                <div class="timer-controls">
+                    <a href="{% url 'start_timer' %}" class="btn btn-success">タイマー開始</a>
+                    <a href="{% url 'stop_timer' %}" class="btn btn-danger">タイマー停止</a>
+                </div>
+                
                 {% empty %}
                 <p>現在、課題はありません。</p>
                 {% endfor %}

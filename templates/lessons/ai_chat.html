@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}AIレッスンチャット{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>AIレッスンチャット</h2>
+    <div id="chat-window" style="border: 1px solid #ddd; padding: 10px; height: 300px; overflow-y: scroll;">
+        <!-- チャットメッセージがここに表示される -->
+    </div>
+    <form id="chat-form">
+        {% csrf_token %}
+        <input type="text" id="question" name="question" class="form-control" placeholder="質問を入力してください">
+        <button type="submit" class="btn btn-primary mt-2">送信</button>
+    </form>
+</div>
+<script>
+    document.getElementById('chat-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const question = document.getElementById('question').value;
+        fetch("{% url 'ai_ask' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: new URLSearchParams({'question': question})
+        })
+        .then(response => response.json())
+        .then(data => {
+            const chatWindow = document.getElementById('chat-window');
+            if (data.answer) {
+                chatWindow.innerHTML += `<p><strong>AI:</strong> ${data.answer}</p>`;
+            } else {
+                chatWindow.innerHTML += `<p><strong>Error:</strong> ${data.error}</p>`;
+            }
+            document.getElementById('question').value = "";
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+{% endblock %}

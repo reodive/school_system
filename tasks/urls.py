@@ -26,5 +26,10 @@ urlpatterns = [
     path("api/tasks/", TaskListAPI.as_view(), name="task_list_api"),
     path("api/tasks/<int:task_id>/", TaskDetailAPI.as_view(), name="task_detail_api"),
     path('group/<int:group_id>/roster/', views.group_roster, name='group_roster'),
-    path('teacher_dashboard/', views.teacher_dashboard, name='teacher_dashboard'),
+    path('teacher_dashboard/', views.tasks_dashboard, name='teacher_dashboard'),
+    path('tasks_by_subject/', views.tasks_by_subject, name='tasks_by_subject'),
+    path('group/<int:group_id>/roster/', views.group_roster, name='group_roster'),
+    path('group/<int:group_id>/stream/', views.group_stream, name='group_stream'),
+    path('group/selection/', views.group_selection, name='group_selection'),
+
 ]

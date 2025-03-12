@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}グループ選択{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>グループを選択してください</h2>
+    <ul class="list-group">
+        {% for group in groups %}
+            <li class="list-group-item">
+                <a href="{% url 'group_stream' group.id %}">{{ group.name }}</a>
+            </li>
+        {% empty %}
+            <li class="list-group-item">利用可能なグループがありません。</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

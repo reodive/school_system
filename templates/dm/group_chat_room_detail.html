@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}チャットルーム: {{ room.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ room.name }} - チャット</h2>
+    <div class="card mb-3">
+        <div class="card-body" style="max-height:300px; overflow-y:auto;">
+            {% for msg in messages_qs %}
+                {% if msg.sender == user %}
+                    <div class="text-end mb-2">
+                        <span class="badge bg-primary">{{ msg.content }}</span>
+                        <small class="text-muted">{{ msg.created_at|date:"m/d H:i" }}</small>
+                    </div>
+                {% else %}
+                    <div class="text-start mb-2">
+                        <span class="badge bg-secondary">{{ msg.content }}</span>
+                        <small class="text-muted">{{ msg.created_at|date:"m/d H:i" }}</small>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">送信</button>
+    </form>
+</div>
+{% endblock %}

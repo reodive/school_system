@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}ログイン履歴{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>ログイン履歴</h2>
+    {% if histories %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ログイン日時</th>
+                    <th>IPアドレス</th>
+                    <th>ユーザーエージェント</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for history in histories %}
+                    <tr>
+                        <td>{{ history.login_time|date:"Y-m-d H:i" }}</td>
+                        <td>{{ history.ip_address }}</td>
+                        <td>{{ history.user_agent }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>ログイン履歴はありません。</p>
+    {% endif %}
+</div>
+{% endblock %}
