@@ -15,105 +15,198 @@
 
     <title>{% block title %}SmartLearn - 学習支援システム{% endblock %}</title>
     
-    <!-- Google Fonts / Bootstrap CSS -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts: 例として Montserrat & Noto Sans JP -->
+    <!-- 実際にAcumin Proを使う場合はWebフォントを用意し、@font-faceまたはTypekit等を利用 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Great+Vibes&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap" rel="stylesheet">
+    
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <!-- カスタムCSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Great+Vibes&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Yeseva+One&display=swap" rel="stylesheet">
+
     <style>
-        /* ベース設定 */
-        * { box-sizing: border-box; }
+        /* --------------------------------------------
+           1. ベース設定
+        -------------------------------------------- */
+        * {
+            box-sizing: border-box;
+        }
         body {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            /* 日本語はNoto Sans JP、英字はAcumin Pro(例としてMontserrat)を優先 */
+            font-family: 'Noto Sans JP', 'Montserrat', sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             scroll-behavior: smooth;
-            background-color: #f5f5f5;
+            background: linear-gradient(180deg, #fff 0%, #e5ecf5 100%);
         }
-        /* ヘッダー */
-        header { flex-shrink: 0; }
-        .navbar-custom {
-            background: rgba(255, 255, 255, 0.95);
-            border-bottom: 1px solid #ddd;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            width: 100%;
-            transition: background 0.3s ease-in-out;
+
+        /* --------------------------------------------
+           2. 最上部の黒い細いヘッダー
+        -------------------------------------------- */
+        .topbar {
+            background-color: #000000;  /* 真っ黒 */
+            color: #ffffff;
+            font-size: 0.85rem;
+            padding: 3px 15px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
         }
-        .navbar-custom .navbar-brand {
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: #333;
-            transition: color 0.3s;
+        .topbar .lang-switch {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .navbar-custom .nav-link {
+        .topbar .lang-switch i {
+            font-size: 1.1rem;
+        }
+        .topbar .lang-switch .divider {
+            margin: 0 4px;
+            color: #ffffff;
+        }
+
+        /* --------------------------------------------
+           3. メインヘッダー (紺色)
+        -------------------------------------------- */
+        header {
+            background-color: #00239c; /* 薄めた紺瑠璃色 */
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        /* 左上ロゴ (元のBebas Neueを使う) */
+        header .logo {
+            font-family: 'Anton'; 
+            font-size: 2rem;
+            letter-spacing: 1px;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+        /* 右上ユーザー情報 */
+        header .user-info {
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        header .user-info .notification-icon {
+            position: relative;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        header .user-info .notification-icon .badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #ff6600;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        header .user-info span {
+            font-size: 0.9rem;
+        }
+        header .logout-btn form {
+            margin: 0;
+        }
+        header .logout-btn button {
+            background: none;
+            border: none;
+            color: #ffffff;
             font-size: 1rem;
-            font-weight: 500;
-            color: #555;
-            padding: 0.6rem 1rem;
-            transition: color 0.3s, background 0.3s;
+            cursor: pointer;
         }
-        .navbar-custom .nav-link:hover {
-            color: #000;
-            background: rgba(0,0,0,0.05);
-            border-radius: 5px;
-        }
-        .navbar-brand img {
-            max-height: 40px;
-            margin-right: 8px;
-        }
-        /* 中央領域：サイドバー＋メインコンテンツ */
+
+        /* --------------------------------------------
+           4. 中央領域：サイドバー＋メインコンテンツ
+        -------------------------------------------- */
         .middle-area {
             flex: 1;
             display: flex;
-            flex-direction: row;
             overflow: hidden;
         }
-        /* サイドバー */
+
+        /* --------------------------------------------
+           5. サイドバー
+        -------------------------------------------- */
         aside.sidebar {
             width: 250px;
-            background-color: #f8f9fa;
-            border-right: 1px solid #ddd;
+            background: linear-gradient(160deg, #00239c, #4a66b9);
             padding: 20px;
             flex-shrink: 0;
         }
         aside.sidebar h4 {
             margin-top: 0;
             margin-bottom: 20px;
+            font-family: Yeseva One;
+            font-size: 2rem;
+            letter-spacing: 1px;
+            color: hsl(49, 100%, 52%);
         }
+
         aside.sidebar a {
             display: block;
             padding: 10px;
-            margin-bottom: 8px;
-            color: #333;
+            margin-bottom: 10px;
+            color: #ffc400;
             text-decoration: none;
             border-radius: 4px;
-            transition: background 0.2s;
+            background-color: rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
         }
         aside.sidebar a:hover {
-            background-color: #e9ecef;
+            background-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         }
-        /* メインコンテンツ */
+        aside.sidebar a i {
+            margin-right: 8px;
+        }
+        /* 英語 + 日本語小さく の例 */
+        aside.sidebar a .en {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            margin-right: 6px;
+        }
+        aside.sidebar a .jp {
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
+
+        /* --------------------------------------------
+           6. メインコンテンツ
+        -------------------------------------------- */
         main.main-content {
             flex: 1;
             padding: 20px;
-            background-color: #fff;
             overflow-y: auto;
         }
-        /* フッター */
-        footer {
-            flex-shrink: 0;
-            background: #222;
-            color: #fff;
-            text-align: center;
-            padding: 1rem 0;
-            width: 100%;
-        }
+
         /* メッセージ表示エリア */
         .message-area {
             position: fixed;
@@ -122,6 +215,7 @@
             z-index: 1050;
             width: auto;
         }
+
         /* レスポンシブ対応 */
         @media (max-width: 768px) {
             .middle-area {
@@ -133,96 +227,122 @@
                 border-bottom: 1px solid #ddd;
             }
         }
+        /* フッターのスタイル */
+        footer.footer {
+             background-color: #000000;
+             color: #ffffff;
+             text-align: center;
+             padding: 5px 15px;
+        }
+
     </style>
+
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <!-- ヘッダー -->
+
+    <!-- 1) 黒い細いヘッダー -->
+    <div class="topbar">
+        <div class="lang-switch">
+            <i class="bi bi-globe"></i>
+            <span class="divider">|</span>
+            <span>JP</span>
+        </div>
+    </div>
+
+    <!-- 2) メインヘッダー (薄い紺瑠璃色) -->
     <header>
-        <nav class="navbar navbar-expand-lg navbar-custom">
-            <div class="container-fluid">
-                <a class="navbar-brand d-flex align-items-center" href="{% url 'task_list' %}">
-                    <img src="{% static 'images/smartlearn_logo.png' %}" alt="SmartLearn Logo" onerror="this.style.display='none'">
-                    <span>SmartLearn</span>
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarNav" aria-controls="navbarNav"
-                        aria-expanded="false" aria-label="メニューを切り替え">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        {% if user.is_authenticated %}
-                            {% if user.role == "teacher" or user.role == "admin" %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'create_task' %}">
-                                        <i class="bi bi-pencil-square"></i> 課題作成
-                                    </a>
-                                </li>
-                            {% elif user.role == "student" %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'task_list' %}">
-                                        <i class="bi bi-folder2-open"></i> 課題一覧
-                                    </a>
-                                </li>
-                            {% endif %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'dashboard' %}">
-                                    <i class="bi bi-bar-chart"></i> ダッシュボード
-                                </a>
-                            </li>
-                            <li class="nav-item d-flex align-items-center mx-2 text-muted">
-                                <small>こんにちは、{{ user.username }} さん</small>
-                            </li>
-                            <li class="nav-item">
-                                <form action="{% url 'logout' %}" method="POST" style="display: inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-link nav-link p-0" style="border: none;">
-                                        <i class="bi bi-door-open"></i> ログアウト
-                                    </button>
-                                </form>
-                            </li>
-                        {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'login' %}">
-                                    <i class="bi bi-key"></i> ログイン
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'signup' %}">
-                                    <i class="bi bi-person-plus"></i> サインアップ
-                                </a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </div>
+        <div class="logo">SmartLearn</div>
+        <!-- ユーザー情報 + 通知アイコン + ログアウトボタン -->
+        <div class="user-info">
+            <span>{{ user.role|default:"Guest" }}</span>
+            <!-- 通知アイコン + 数字バッジ -->
+            <div class="notification-icon">
+                <i class="bi bi-bell"></i>
+                {% if notifications_count|default:0 > 0 %}
+                <div class="badge">{{ notifications_count }}</div>
+                {% endif %}
             </div>
-        </nav>
+            <div class="logout-btn">
+                <form action="{% url 'logout' %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit">Logout</button>
+                </form>
+            </div>
+        </div>
     </header>
 
     <!-- 中央領域 -->
     <div class="middle-area">
         <!-- サイドバー -->
         <aside class="sidebar">
-            <h4>メニュー</h4>
-            <a href="{% url 'home' %}"><i class="bi bi-house-door"></i> ホーム</a>
-            <a href="{% url 'task_list' %}"><i class="bi bi-folder2-open"></i> 課題一覧</a>
-            <a href="{% url 'dashboard' %}"><i class="bi bi-bar-chart"></i> ダッシュボード</a>
-            <a href="{% url 'announcement_list' %}"><i class="bi bi-megaphone"></i> お知らせ</a>
+            <h4>Menu</h4>
+            <a href="{% url 'home' %}">
+                <i class="bi bi-house-door"></i> 
+                <span class="en">Home</span>
+                <span class="jp">ホーム</span>
+            </a>
+            <a href="{% url 'task_list' %}">
+                <i class="bi bi-folder2-open"></i> 
+                <span class="en">Tasks</span>
+                <span class="jp">課題一覧</span>
+            </a>
+            <a href="{% url 'dashboard' %}">
+                <i class="bi bi-bar-chart"></i> 
+                <span class="en">Dashboard</span>
+                <span class="jp">ダッシュボード</span>
+            </a>
+            <a href="{% url 'announcement_list' %}">
+                <i class="bi bi-megaphone"></i> 
+                <span class="en">News</span>
+                <span class="jp">お知らせ</span>
+            </a>
             {% if group %}
-                <a href="{% url 'group_stream' group.id %}"><i class="bi bi-clock-history"></i> 生徒グループ</a>
-                <a href="{% url 'group_roster' group.id %}"><i class="bi bi-people"></i> グループ名簿</a>
+                <a href="{% url 'group_stream' group.id %}">
+                    <i class="bi bi-clock-history"></i> 
+                    <span class="en">Stream</span>
+                    <span class="jp">グループ</span>
+                </a>
+                <a href="{% url 'group_roster' group.id %}">
+                    <i class="bi bi-people"></i> 
+                    <span class="en">Roster</span>
+                    <span class="jp">名簿</span>
+                </a>
             {% else %}
-                <a href="{% url 'group_selection' %}"><i class="bi bi-people"></i> グループ選択</a>
+                <a href="{% url 'group_selection' %}">
+                    <i class="bi bi-people"></i> 
+                    <span class="en">Groups</span>
+                    <span class="jp">グループ選択</span>
+                </a>
             {% endif %}
-            <a href="{% url 'teacher_dashboard' %}"><i class="bi bi-graph-up"></i> 教科別課題</a>
-            <a href="{% url 'calendar_view' %}"><i class="bi bi-calendar"></i> カレンダー</a>
-            <a href="{% url 'message_list' %}"><i class="bi bi-chat-dots"></i> チャット</a>  
-            <a href="{% url 'group_chat_room_list' %}"><i class="bi bi-people"></i> グループチャット</a>
-            <a href="{% url 'profile_settings' %}"><i class="bi bi-person-lines-fill"></i> アカウント設定</a>
-        </aside>        
+            <a href="{% url 'teacher_dashboard' %}">
+                <i class="bi bi-graph-up"></i>
+                <span class="en">Subjects</span>
+                <span class="jp">教科別</span>
+            </a>
+            <a href="{% url 'calendar_view' %}">
+                <i class="bi bi-calendar"></i>
+                <span class="en">Calendar</span>
+                <span class="jp">カレンダー</span>
+            </a>
+            <a href="{% url 'message_list' %}">
+                <i class="bi bi-chat-dots"></i>
+                <span class="en">Chat</span>
+                <span class="jp">チャット</span>
+            </a>
+            <a href="{% url 'group_chat_room_list' %}">
+                <i class="bi bi-people"></i>
+                <span class="en">G-Chat</span>
+                <span class="jp">グループ</span>
+            </a>
+            <a href="{% url 'profile_settings' %}">
+                <i class="bi bi-person-lines-fill"></i>
+                <span class="en">Profile</span>
+                <span class="jp">設定</span>
+            </a>
+        </aside>
 
-        <!-- メインコンテンツ -->
+        <!-- メインコンテンツ：他ページ用のブロック -->
         <main class="main-content">
             <!-- メッセージ表示エリア -->
             <div class="message-area">
@@ -235,29 +355,17 @@
                     {% endfor %}
                 {% endif %}
             </div>
-            <!-- コンテンツブロック -->
+            <!-- ページごとのコンテンツを表示 -->
             {% block content %}{% endblock %}
         </main>
     </div>
+    <!-- フッターの追加 -->
+<footer class="footer">
+    <p>&copy; 2025 SmartLearn. All rights reserved.</p>
+</footer>
 
-    <!-- フッター -->
-    <footer>
-        &copy; {% now "Y" %} SmartLearn - すべての権利を保有
-    </footer>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- ナビゲーションバーの縮小効果 -->
-    <script>
-        window.addEventListener('scroll', function() {
-            const navbar = document.querySelector('.navbar-custom');
-            if (window.scrollY > 50) {
-                navbar.classList.add('shrink');
-            } else {
-                navbar.classList.remove('shrink');
-            }
-        });
-    </script>
-    {% block extra_js %}{% endblock %}
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_js %}{% endblock %}
 </body>
-</html>
+</html> 

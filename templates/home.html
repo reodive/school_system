@@ -1,54 +1,123 @@
 {% extends "base.html" %}
-{% load static %}  ← これを追加
+{% load static %}
 
-{% block title %}ホーム{% endblock %}
-
-{% block extra_head %}
-<style>
-    .hero-section {
-        background: url('/static/images/hero-bg.jpg') no-repeat center center;
-        background-size: cover;
-        position: relative;
-        padding: 5rem 0;
-        text-align: center;
-        color: white;
-    }
-    
-    .hero-overlay {
-        background-color: rgba(0, 0, 0, 0.5);
-        padding: 3rem;
-        border-radius: 10px;
-    }
-    
-    .feature-card {
-        background: white;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s ease-in-out;
-    }
-    
-    .feature-card:hover {
-        transform: translateY(-3px);
-    }
-    
-    .feature-card img {
-        border-radius: 10px;
-        max-height: 150px;
-        object-fit: cover;
-    }
-</style>
-{% endblock %}
+{% block title %}Home - SmartLearn{% endblock %}
 
 {% block content %}
-<div class="hero-section" style="background: url('{% static 'images/hero-bg.jpg' %}') no-repeat center center; background-size: cover;">
-    <div class="container">
-        <div class="hero-overlay">
-            <h1 class="mb-3">Welcome、SmartLearn へ</h1>
-            <p class="lead">生徒と教師のための効率的な課題管理とコミュニケーションツールを提供します。</p>
-            <a class="btn btn-primary btn-lg mt-3" href="{% url 'dashboard' %}" role="button">ダッシュボードへ</a>
-        </div>
+<!-- ホーム画面専用のコンテンツ -->
+
+<!-- 校舎イメージ（背景グラデーションでシンプルな校舎を表現） -->
+<div class="school-building" style="
+    width: 100%;
+    max-width: 700px;
+    margin: 20px auto;
+    height: 220px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #e8edf3, #cfd8e3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #5c6bc0;
+    font-size: 1.2rem;
+    font-family: 'Noto Sans JP', sans-serif;
+">
+    <span>School Building Image</span>
+</div>
+
+<!-- AIアシスタントエリア -->
+<div class="ai-assistant" style="text-align: center; margin-bottom: 25px;">
+    <img src="{% static 'images/ai_assistant_default.png' %}" alt="AI Assistant" style="
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 3px solid #000;
+        object-fit: cover;
+    ">
+    <br>
+    <button style="
+        margin-top: 12px;
+        background-color: #000;
+        color: #000;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+    ">Change Skin</button>
+</div>
+
+<!-- 4つの情報ボックスを横並びに -->
+<div class="info-boxes" style="
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+">
+    <!-- 今日の日付ボックス（タイトルは省略し、日時と曜日のみ表示） -->
+    <div class="info-box" style="
+        width: 200px;
+        height: 250px;
+        background-color: #ff6600;
+        border: 2px solid #ffecb3;
+        border-radius: 8px;
+        color: #000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 15px;
+    ">
+        <p style="font-size: 1.8rem; margin: 0;">{{ current_date|date:"Y/m/d" }}</p>
+        <hr style="width: 80%; border-top: 1px solid #ffecb3; margin: 10px 0;">
+        <p style="font-size: 1rem; margin: 0;">{{ current_date|date:"l" }}</p>
     </div>
+
+    <!-- 課題一覧ボックス -->
+<div class="info-box" style="
+width: 200px;
+height: 250px;
+background-color: #ff6600;
+border: 2px solid #ffecb3;
+border-radius: 8px;
+color: #000;
+padding: 15px;
+text-align: center;
+">
+<h5 style="font-family: 'Bebas Neue', sans-serif; margin-bottom: 10px; font-weight: bold;"> TASKS</h5>
+<hr style="width: 80%; border-top: 1px solid #ffecb3; margin: 10px auto;">
+<p style="font-size: 0.9rem; margin: 0; text-align: center;">Latest tasks info here.</p>
+</div>
+
+<!-- 進捗状況ボックス -->
+<div class="info-box" style="
+width: 200px;
+height: 250px;
+background-color: #ff6600;
+border: 2px solid #ffecb3;
+border-radius: 8px;
+color: #000;
+padding: 15px;
+text-align: center;
+">
+<h5 style="font-family: 'Bebas Neue', sans-serif; margin-bottom: 10px; font-weight: bold;"> PROGRESS</h5>
+<hr style="width: 80%; border-top: 1px solid #ffecb3; margin: 10px auto;">
+<p style="font-size: 0.9rem; margin: 0; text-align: center;">75% done</p>
+</div>
+
+<!-- DM通知ボックス -->
+<div class="info-box" style="
+width: 200px;
+height: 250px;
+background-color: #ff6600;
+border: 2px solid #ffecb3;
+border-radius: 8px;
+color: #000;
+padding: 15px;
+text-align: center;
+">
+<h5 style="font-family: 'Bebas Neue', sans-serif; margin-bottom: 10px; font-weight: bold;"> DMs</h5>
+<hr style="width: 80%; border-top: 1px solid #ffecb3; margin: 10px auto;">
+<p style="font-size: 0.9rem; margin: 0; text-align: center;">You have new messages.</p>
 </div>
 
 {% endblock %}
