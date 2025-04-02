@@ -15,56 +15,42 @@
 
     <title>{% block title %}SmartLearn - 学習支援システム{% endblock %}</title>
     
-    <!-- Google Fonts: 例として Montserrat & Noto Sans JP -->
-    <!-- 実際にAcumin Proを使う場合はWebフォントを用意し、@font-faceまたはTypekit等を利用 -->
+    <!-- Google Fonts (例: 英文はAcumin Pro相当のMontserrat、和文はNoto Sans JP) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com"> 
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Great+Vibes&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap" rel="stylesheet">
-    
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <!-- ※Acumin Proを利用する場合は、Webフォントとして読み込むか、Typekitなどをご利用ください -->
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <!-- カスタムCSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Great+Vibes&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Yeseva+One&display=swap" rel="stylesheet">
 
     <style>
-        /* --------------------------------------------
-           1. ベース設定
-        -------------------------------------------- */
-        * {
-            box-sizing: border-box;
-        }
+        /* ============================================
+           1. ベース設定 & 背景
+        ============================================ */
+        * { box-sizing: border-box; }
         body {
             margin: 0;
             padding: 0;
-            /* 日本語はNoto Sans JP、英字はAcumin Pro(例としてMontserrat)を優先 */
             font-family: 'Noto Sans JP', 'Montserrat', sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             scroll-behavior: smooth;
-            background: linear-gradient(180deg, #fff 0%, #e5ecf5 100%);
+            /* 背景は薄い紺瑠璃色のグラデーション（シンプルモード/通常モード切替え用にクラス追加可能） */
+            background: linear-gradient(180deg, #e0e6f2 0%, #d1d8e8 100%);
         }
 
-        /* --------------------------------------------
-           2. 最上部の黒い細いヘッダー
-        -------------------------------------------- */
+        /* ============================================
+           2. 最上部の黒いトップバー
+        ============================================ */
         .topbar {
-            background-color: #000000;  /* 真っ黒 */
-            color: #ffffff;
+            background-color: #000;
+            color: #fff;
             font-size: 0.85rem;
             padding: 3px 15px;
             display: flex;
@@ -76,17 +62,12 @@
             align-items: center;
             gap: 8px;
         }
-        .topbar .lang-switch i {
-            font-size: 1.1rem;
-        }
-        .topbar .lang-switch .divider {
-            margin: 0 4px;
-            color: #ffffff;
-        }
+        .topbar .lang-switch i { font-size: 1.1rem; }
+        .topbar .lang-switch .divider { margin: 0 4px; color: #fff; }
 
-        /* --------------------------------------------
-           3. メインヘッダー (紺色)
-        -------------------------------------------- */
+        /* ============================================
+           3. ヘッダー (メインヘッダー)
+        ============================================ */
         header {
             background-color: #00239c; /* 薄めた紺瑠璃色 */
             padding: 10px 20px;
@@ -95,20 +76,20 @@
             align-items: center;
             flex-shrink: 0;
         }
-        /* 左上ロゴ (元のBebas Neueを使う) */
+        /* 左上ロゴ（そのまま） */
         header .logo {
-            font-family: 'Anton'; 
+            font-family: 'Anton', sans-serif;
             font-size: 2rem;
             letter-spacing: 1px;
-            color: #ffffff;
+            color: #fff;
             text-transform: uppercase;
         }
         /* 右上ユーザー情報 */
         header .user-info {
-            color: #ffffff;
             display: flex;
             align-items: center;
             gap: 15px;
+            color: #fff;
         }
         header .user-info .notification-icon {
             position: relative;
@@ -129,32 +110,27 @@
             justify-content: center;
             align-items: center;
         }
-        header .user-info span {
-            font-size: 0.9rem;
-        }
-        header .logout-btn form {
-            margin: 0;
-        }
+        header .logout-btn form { margin: 0; }
         header .logout-btn button {
             background: none;
             border: none;
-            color: #ffffff;
+            color: #fff;
             font-size: 1rem;
             cursor: pointer;
         }
 
-        /* --------------------------------------------
+        /* ============================================
            4. 中央領域：サイドバー＋メインコンテンツ
-        -------------------------------------------- */
+        ============================================ */
         .middle-area {
             flex: 1;
             display: flex;
             overflow: hidden;
         }
 
-        /* --------------------------------------------
-           5. サイドバー
-        -------------------------------------------- */
+        /* ============================================
+           5. サイドバー (固定幅, 英語＋日本語)
+        ============================================ */
         aside.sidebar {
             width: 250px;
             background: linear-gradient(160deg, #00239c, #4a66b9);
@@ -162,14 +138,12 @@
             flex-shrink: 0;
         }
         aside.sidebar h4 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-family: Yeseva One;
+            margin: 0 0 20px;
+            font-family: 'Yeseva One', cursive;
             font-size: 2rem;
             letter-spacing: 1px;
             color: hsl(49, 100%, 52%);
         }
-
         aside.sidebar a {
             display: block;
             padding: 10px;
@@ -184,10 +158,8 @@
             background-color: rgba(255, 255, 255, 0.15);
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         }
-        aside.sidebar a i {
-            margin-right: 8px;
-        }
-        /* 英語 + 日本語小さく の例 */
+        aside.sidebar a i { margin-right: 8px; }
+        /* 英語 + 小さな日本語 */
         aside.sidebar a .en {
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
@@ -198,16 +170,19 @@
             opacity: 0.7;
         }
 
-        /* --------------------------------------------
+        /* ============================================
            6. メインコンテンツ
-        -------------------------------------------- */
+        ============================================ */
         main.main-content {
             flex: 1;
             padding: 20px;
             overflow-y: auto;
+            background-color: #fff;
         }
 
-        /* メッセージ表示エリア */
+        /* ============================================
+           7. メッセージ表示エリア
+        ============================================ */
         .message-area {
             position: fixed;
             top: 70px;
@@ -216,7 +191,9 @@
             width: auto;
         }
 
-        /* レスポンシブ対応 */
+        /* ============================================
+           8. レスポンシブ対応
+        ============================================ */
         @media (max-width: 768px) {
             .middle-area {
                 flex-direction: column;
@@ -227,21 +204,24 @@
                 border-bottom: 1px solid #ddd;
             }
         }
-        /* フッターのスタイル */
-        footer.footer {
-             background-color: #000000;
-             color: #ffffff;
-             text-align: center;
-             padding: 5px 15px;
-        }
 
+        /* ============================================
+           9. フッター (オプション：今回の要望では削除可能)
+        ============================================ */
+        footer.footer {
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            padding: 5px 15px;
+        }
     </style>
 
     {% block extra_head %}{% endblock %}
 </head>
 <body>
+    <body class="{% if request.session.display_mode == 'simple' %}simple-mode{% else %}normal-mode{% endif %}">
 
-    <!-- 1) 黒い細いヘッダー -->
+    <!-- 1) トップバー：黒い細いバー、地球儀アイコンと「JP」 -->
     <div class="topbar">
         <div class="lang-switch">
             <i class="bi bi-globe"></i>
@@ -250,17 +230,15 @@
         </div>
     </div>
 
-    <!-- 2) メインヘッダー (薄い紺瑠璃色) -->
+    <!-- 2) メインヘッダー -->
     <header>
         <div class="logo">SmartLearn</div>
-        <!-- ユーザー情報 + 通知アイコン + ログアウトボタン -->
         <div class="user-info">
             <span>{{ user.role|default:"Guest" }}</span>
-            <!-- 通知アイコン + 数字バッジ -->
             <div class="notification-icon">
                 <i class="bi bi-bell"></i>
                 {% if notifications_count|default:0 > 0 %}
-                <div class="badge">{{ notifications_count }}</div>
+                    <div class="badge">{{ notifications_count }}</div>
                 {% endif %}
             </div>
             <div class="logout-btn">
@@ -272,45 +250,45 @@
         </div>
     </header>
 
-    <!-- 中央領域 -->
+    <!-- 3) 中央領域 -->
     <div class="middle-area">
         <!-- サイドバー -->
         <aside class="sidebar">
             <h4>Menu</h4>
             <a href="{% url 'home' %}">
-                <i class="bi bi-house-door"></i> 
+                <i class="bi bi-house-door"></i>
                 <span class="en">Home</span>
                 <span class="jp">ホーム</span>
             </a>
             <a href="{% url 'task_list' %}">
-                <i class="bi bi-folder2-open"></i> 
+                <i class="bi bi-folder2-open"></i>
                 <span class="en">Tasks</span>
                 <span class="jp">課題一覧</span>
             </a>
             <a href="{% url 'dashboard' %}">
-                <i class="bi bi-bar-chart"></i> 
+                <i class="bi bi-bar-chart"></i>
                 <span class="en">Dashboard</span>
                 <span class="jp">ダッシュボード</span>
             </a>
             <a href="{% url 'announcement_list' %}">
-                <i class="bi bi-megaphone"></i> 
+                <i class="bi bi-megaphone"></i>
                 <span class="en">News</span>
                 <span class="jp">お知らせ</span>
             </a>
             {% if group %}
                 <a href="{% url 'group_stream' group.id %}">
-                    <i class="bi bi-clock-history"></i> 
+                    <i class="bi bi-clock-history"></i>
                     <span class="en">Stream</span>
                     <span class="jp">グループ</span>
                 </a>
                 <a href="{% url 'group_roster' group.id %}">
-                    <i class="bi bi-people"></i> 
+                    <i class="bi bi-people"></i>
                     <span class="en">Roster</span>
                     <span class="jp">名簿</span>
                 </a>
             {% else %}
                 <a href="{% url 'group_selection' %}">
-                    <i class="bi bi-people"></i> 
+                    <i class="bi bi-people"></i>
                     <span class="en">Groups</span>
                     <span class="jp">グループ選択</span>
                 </a>
@@ -342,9 +320,8 @@
             </a>
         </aside>
 
-        <!-- メインコンテンツ：他ページ用のブロック -->
+        <!-- メインコンテンツ -->
         <main class="main-content">
-            <!-- メッセージ表示エリア -->
             <div class="message-area">
                 {% if messages %}
                     {% for message in messages %}
@@ -355,17 +332,17 @@
                     {% endfor %}
                 {% endif %}
             </div>
-            <!-- ページごとのコンテンツを表示 -->
             {% block content %}{% endblock %}
         </main>
     </div>
-    <!-- フッターの追加 -->
-<footer class="footer">
-    <p>&copy; 2025 SmartLearn. All rights reserved.</p>
-</footer>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-{% block extra_js %}{% endblock %}
+    <!-- フッター (必要なら表示、今回は追加しています) -->
+    <footer class="footer">
+        <p>&copy; 2025 SmartLearn. All rights reserved.</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
 </body>
-</html> 
+</html>

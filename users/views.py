@@ -1,62 +1,89 @@
-# users/views.py
+"""
+users/views.py
+
+ユーザーに関連する各種ビューを実装しています。
+- パスワード変更、通知設定、ログイン履歴表示
+- ユーザー登録、ログアウト
+- ダッシュボードの表示（生徒/教師別）
+- ユーザープロフィール API
+
+※ 各ビューでは、Django の認証システム、メッセージフレームワーク、セッション更新を適用しています。
+"""
+
 import datetime
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, update_session_auth_hash
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
-# REST Framework 関連
+from django.urls import reverse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 # フォーム、シリアライザ、モデルのインポート
-from .forms import CustomUserCreationForm, CustomAuthenticationForm
+from .forms import (
+    CustomUserCreationForm,
+    CustomAuthenticationForm,
+    ProfileUpdateForm,
+    NotificationSettingForm,
+    CustomPasswordChangeForm,
+)
 from .serializers import UserSerializer
-from .models import CustomUser
-from tasks.models import Task 
-from tasks.models import Group
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from .forms import ProfileUpdateForm
-from .forms import NotificationSettingForm
-from .models import NotificationSetting
-from django.contrib.auth import update_session_auth_hash
+from .models import CustomUser, NotificationSetting
+from tasks.models import Task, Group
 from django.shortcuts import redirect
-from .forms import CustomPasswordChangeForm
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
 
+def switch_mode(request, mode):
+    # mode: "simple" または "normal" が渡される
+    if mode in ["simple", "normal"]:
+        request.session['display_mode'] = mode
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+# ------------------------------------------------------------------------------
+# ユーザーのログイン履歴表示ビュー（LoginHistoryモデル実装済みの場合）
+# ------------------------------------------------------------------------------
 @login_required
 def login_history(request):
+    """
+    現在のログインユーザーのログイン履歴を最新順に表示します。
+    ※LoginHistoryモデルが定義され、Userに関連付けられている前提です。
+    """
     histories = request.user.login_histories.order_by('-login_time')
     return render(request, 'users/login_history.html', {'histories': histories})
 
+
+# ------------------------------------------------------------------------------
+# 独自パスワード変更ビュー
+# ------------------------------------------------------------------------------
 @login_required
 def change_password(request):
     """
-    独自パスワード変更ビュー
+    ユーザーがパスワードを変更するビューです。
+    POST時にフォームのバリデーションを行い、変更後はセッション情報を更新します。
     """
     if request.method == "POST":
         form = CustomPasswordChangeForm(user=request.user, data=request.POST)
         if form.is_valid():
             user = form.save()
-            # セッション内の認証情報を更新（変更後もログイン状態を維持）
-            update_session_auth_hash(request, user)
+            update_session_auth_hash(request, user)  # ログアウトさせずにパスワード変更後も認証状態を維持
             messages.success(request, "パスワードが変更されました。")
-            return redirect('profile_settings')  # 例：アカウント設定ページへ
+            return redirect('profile_settings')
         else:
             messages.error(request, "エラーがあります。入力内容を確認してください。")
     else:
         form = CustomPasswordChangeForm(user=request.user)
     return render(request, 'users/change_password.html', {'form': form})
 
+
+# ------------------------------------------------------------------------------
+# 通知設定ビュー
+# ------------------------------------------------------------------------------
 @login_required
 def notification_settings(request):
     """
-    ユーザーごとの通知設定を表示・更新するビュー
+    ユーザーごとの通知設定を表示・更新します。
+    通知設定が存在しない場合は自動で作成します。
     """
-    # ユーザーに対して通知設定がなければ作成
     notif_setting, created = NotificationSetting.objects.get_or_create(user=request.user)
     if request.method == "POST":
         form = NotificationSettingForm(request.POST, instance=notif_setting)
@@ -70,9 +97,13 @@ def notification_settings(request):
         form = NotificationSettingForm(instance=notif_setting)
     return render(request, "users/notification_settings.html", {"form": form})
 
+
+# ------------------------------------------------------------------------------
+# ユーザープロフィール API
+# ------------------------------------------------------------------------------
 class UserProfileAPI(APIView):
     """
-    認証済みユーザーのプロフィール情報をJSON形式で返すAPI
+    認証済みユーザーのプロフィール情報を JSON 形式で返す API です。
     """
     permission_classes = [IsAuthenticated]
 
@@ -80,137 +111,125 @@ class UserProfileAPI(APIView):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
 
-def create_task(request):
-    if request.method == "POST":
-        title = request.POST.get("title", "").strip()
-        description = request.POST.get("description", "").strip()
-        deadline_str = request.POST.get("deadline", None)  # ✅ デフォルト値を None に変更
 
-        # ✅ バリデーション: 空ならエラーメッセージを表示
-        if not title:
-            messages.error(request, "タイトルを入力してください。")
-            return redirect("create_task")
-        
-        if not deadline_str or deadline_str.strip() == "":
-            messages.error(request, "締切日を入力してください。")
-            return redirect("create_task")
-
-        try:
-            deadline_date = datetime.datetime.strptime(deadline_str.strip(), "%Y-%m-%d").date()
-        except ValueError:
-            messages.error(request, "正しい日付形式（YYYY-MM-DD）で入力してください。")
-            return redirect("create_task")
-
-        # ✅ データベースに保存（例: Taskモデルを使用）
-        Task.objects.create(title=title, description=description, deadline=deadline_date)
-        messages.success(request, "課題が作成されました。")
-        return redirect("task_list")
-
-    return render(request, "tasks/create_task.html")
-
-@login_required
-def group_detail(request, group_id):
-    """
-    指定したグループの詳細情報、関連する課題やお知らせを表示するビュー
-    ※グループは tasks.models.Group を想定
-    """
-    group = get_object_or_404(Group, pk=group_id)
-    # グループに紐づく課題やお知らせを取得
-    tasks = group.task_set.all()
-    announcements = group.announcements.all().order_by('-created_at')
-    return render(request, 'group_detail.html', {
-        'group': group,
-        'tasks': tasks,
-        'announcements': announcements,
-    })
-
+# ------------------------------------------------------------------------------
+# ユーザー登録ビュー
+# ------------------------------------------------------------------------------
 def signup(request):
     """
-    ユーザー登録フォームの表示と、登録処理を行うビュー
-    登録後は自動でログインし、ダッシュボードへリダイレクトする
+    ユーザー登録フォームを表示し、登録処理を実行します。
+    登録後、自動ログインしてダッシュボードにリダイレクトします。
     """
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect("dashboard")  # 登録後のリダイレクト先（適宜変更）
+            messages.success(request, "ユーザー登録が完了しました。")
+            return redirect("dashboard")
+        else:
+            messages.error(request, "入力内容に誤りがあります。")
     else:
         form = CustomUserCreationForm()
     return render(request, "users/signup.html", {"form": form})
 
 
+# ------------------------------------------------------------------------------
+# ログアウトビュー
+# ------------------------------------------------------------------------------
 def user_logout(request):
     """
-    ログアウト処理後、ホームページにリダイレクトするビュー
+    ユーザーをログアウトし、ホームページにリダイレクトします。
     """
     logout(request)
+    messages.info(request, "ログアウトしました。")
     return redirect("home")
 
+
+# ------------------------------------------------------------------------------
+# ダッシュボードビュー
+# ------------------------------------------------------------------------------
 @login_required
 def dashboard(request):
-    user = request.user  # 現在のログインユーザー
+    """
+    ユーザーのロールに応じたダッシュボードを表示します。
+    - 学生の場合: 自身に割り当てられた課題一覧
+    - 教師の場合: 全課題の一覧
+    """
+    user = request.user
 
     if user.role == "student":
         template_name = "users/student_dashboard.html"
-        tasks = Task.objects.filter(assigned_to=user)  # 生徒に割り当てられた課題
+        tasks = Task.objects.filter(assigned_to=user)
     elif user.role == "teacher":
         template_name = "users/teacher_dashboard.html"
-        tasks = Task.objects.all()  # 先生用にはすべての課題を表示
+        tasks = Task.objects.all()
     else:
-        return redirect("/")  # ロールが不明な場合はホームにリダイレクト
+        messages.error(request, "ユーザー権限が不正です。")
+        return redirect("home")
 
-    # 課題の進捗を計算
+    # 課題の進捗計算（submitted, pending が数値フィールドの場合）
     for task in tasks:
-        task.progress = (task.submitted / (task.submitted + task.pending) * 100) if (task.submitted + task.pending) > 0 else 0
+        try:
+            task.total = task.submitted + task.pending
+            task.progress = (task.submitted / task.total * 100) if task.total > 0 else 0
+        except Exception:
+            task.progress = 0
 
-    return render(request, template_name, {"user": user, "tasks": tasks})
+    context = {"user": user, "tasks": tasks}
+    return render(request, template_name, context)
 
 
-
-
+# ------------------------------------------------------------------------------
+# 生徒用ダッシュボードビュー
+# ------------------------------------------------------------------------------
 @login_required
 def student_dashboard(request):
     """
-    生徒用ダッシュボード
-    サンプルデータを用いて課題の提出状況と進捗率を表示する。
-    ※実際にはデータベースから動的に取得するよう修正すること
+    生徒用ダッシュボードを表示します。
+    ※ここではサンプルデータを利用していますが、実際にはデータベースから動的に取得するようにしてください。
     """
     assignments = [
         {'title': '数学の宿題', 'submitted': False, 'progress': 50},
         {'title': '英語レポート', 'submitted': True, 'progress': 100},
     ]
-    context = {
-        'assignments': assignments,
-    }
+    context = {'assignments': assignments}
     return render(request, 'student_dashboard.html', context)
 
+
+# ------------------------------------------------------------------------------
+# 教師用ダッシュボードビュー
+# ------------------------------------------------------------------------------
 @login_required
 def teacher_dashboard(request):
+    """
+    教師用ダッシュボードを表示します。
+    全課題と最近の活動（例示的なデータ）を表示します。
+    """
     tasks = Task.objects.all()
-
     for task in tasks:
-        task.total = task.submitted + task.pending  # 合計数を事前計算
-        task.progress = (task.submitted / task.total * 100) if task.total > 0 else 0  # 進捗率を計算
+        try:
+            task.total = task.submitted + task.pending
+            task.progress = (task.submitted / task.total * 100) if task.total > 0 else 0
+        except Exception:
+            task.progress = 0
 
     activities = [
         '生徒Aが「数学の宿題」を提出しました。',
         '生徒Bがコメントを追加しました。',
         '新しい課題「理科の実験レポート」が作成されました。',
     ]
-
-    context = {
-        'tasks': tasks,
-        'activities': activities,
-    }
+    context = {"tasks": tasks, "activities": activities}
     return render(request, 'users/teacher_dashboard.html', context)
 
+
+# ------------------------------------------------------------------------------
+# プロフィール設定ビュー
+# ------------------------------------------------------------------------------
 @login_required
 def profile_settings(request):
     """
-    ユーザーのプロフィールを更新するビュー。
-    POSTで送信された場合はフォームをバリデーションし、更新。
-    GETの場合は現在のユーザー情報をフォームにセットして表示。
+    ユーザーのプロフィール設定画面を表示し、更新を行います。
     """
     if request.method == "POST":
         form = ProfileUpdateForm(request.POST, instance=request.user)
