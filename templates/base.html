@@ -14,12 +14,11 @@
     <meta property="og:image" content="{% static 'images/smartlearn_logo.png' %}">
 
     <title>{% block title %}SmartLearn - 学習支援システム{% endblock %}</title>
-    
-    <!-- Google Fonts (例: 英文はAcumin Pro相当のMontserrat、和文はNoto Sans JP) -->
+
+    <!-- Google Fonts (英字はMontserrat、和文はNoto Sans JP、ロゴはAnton) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
-    <!-- ※Acumin Proを利用する場合は、Webフォントとして読み込むか、Typekitなどをご利用ください -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Noto+Sans+JP:wght@400;700&family=Anton&display=swap" rel="stylesheet">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
@@ -29,9 +28,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
     <style>
-        /* ============================================
-           1. ベース設定 & 背景
-        ============================================ */
+        /* 1. ベース設定 & 背景 */
         * { box-sizing: border-box; }
         body {
             margin: 0;
@@ -41,13 +38,11 @@
             display: flex;
             flex-direction: column;
             scroll-behavior: smooth;
-            /* 背景は薄い紺瑠璃色のグラデーション（シンプルモード/通常モード切替え用にクラス追加可能） */
+            /* シンプルモードの場合はグラデーション、通常モードはCSSで背景画像上書き */
             background: linear-gradient(180deg, #e0e6f2 0%, #d1d8e8 100%);
         }
 
-        /* ============================================
-           2. 最上部の黒いトップバー
-        ============================================ */
+        /* 2. トップバー */
         .topbar {
             background-color: #000;
             color: #fff;
@@ -65,18 +60,15 @@
         .topbar .lang-switch i { font-size: 1.1rem; }
         .topbar .lang-switch .divider { margin: 0 4px; color: #fff; }
 
-        /* ============================================
-           3. ヘッダー (メインヘッダー)
-        ============================================ */
+        /* 3. メインヘッダー */
         header {
-            background-color: #00239c; /* 薄めた紺瑠璃色 */
+            background-color: #a56bf1; /* 薄めた紺瑠璃色 */
             padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-shrink: 0;
         }
-        /* 左上ロゴ（そのまま） */
         header .logo {
             font-family: 'Anton', sans-serif;
             font-size: 2rem;
@@ -84,7 +76,6 @@
             color: #fff;
             text-transform: uppercase;
         }
-        /* 右上ユーザー情報 */
         header .user-info {
             display: flex;
             align-items: center;
@@ -100,7 +91,7 @@
             position: absolute;
             top: -10px;
             right: -10px;
-            background-color: #ff6600;
+            background-color: #d7d7d7;
             color: #fff;
             border-radius: 50%;
             font-size: 0.7rem;
@@ -108,7 +99,7 @@
             height: 18px;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: center;nu
         }
         header .logout-btn form { margin: 0; }
         header .logout-btn button {
@@ -118,71 +109,72 @@
             font-size: 1rem;
             cursor: pointer;
         }
+        header .mode-switch a {
+            color: #fff;
+            margin-left: 10px;
+            font-size: 0.85rem;
+            text-decoration: underline;
+        }
 
-        /* ============================================
-           4. 中央領域：サイドバー＋メインコンテンツ
-        ============================================ */
+        /* 4. 中央領域：サイドバー＋メインコンテンツ */
         .middle-area {
             flex: 1;
             display: flex;
             overflow: hidden;
         }
 
-        /* ============================================
-           5. サイドバー (固定幅, 英語＋日本語)
-        ============================================ */
+        /* 5. サイドバー */
         aside.sidebar {
             width: 250px;
-            background: linear-gradient(160deg, #00239c, #4a66b9);
+            background: linear-gradient(160deg, rgb(249, 241, 255));
             padding: 20px;
             flex-shrink: 0;
         }
         aside.sidebar h4 {
             margin: 0 0 20px;
-            font-family: 'Yeseva One', cursive;
+            font-family: 'Yeseva One', sans-serif;
             font-size: 2rem;
             letter-spacing: 1px;
-            color: hsl(49, 100%, 52%);
+            color: hsl(0, 0%, 0%);
+            text-align: center;
+            font-weight: bold;
         }
         aside.sidebar a {
             display: block;
             padding: 10px;
             margin-bottom: 10px;
-            color: #ffc400;
+            color: #000000;
             text-decoration: none;
             border-radius: 4px;
-            background-color: rgba(255, 255, 255, 0.05);
+            background-color: rgba(199, 129, 222, 0.05);
             transition: all 0.3s ease;
         }
         aside.sidebar a:hover {
             background-color: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 6px rgba(240, 175, 255, 0.3);
         }
         aside.sidebar a i { margin-right: 8px; }
-        /* 英語 + 小さな日本語 */
         aside.sidebar a .en {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
+            font-family: 'Yeseva One', sans-serif;
             margin-right: 6px;
         }
         aside.sidebar a .jp {
             font-size: 0.7rem;
             opacity: 0.7;
         }
-
-        /* ============================================
-           6. メインコンテンツ
-        ============================================ */
+        body.normal-mode aside.sidebar {
+            width: 200px;    /* サイドバーの幅を狭くする */
+            padding: 10px;   /* 余白も少なめに */
+        }
+        /* 6. メインコンテンツ */
         main.main-content {
             flex: 1;
             padding: 20px;
             overflow-y: auto;
-            background-color: #fff;
+            background-color: transparent;
         }
 
-        /* ============================================
-           7. メッセージ表示エリア
-        ============================================ */
+        /* 7. メッセージ表示エリア */
         .message-area {
             position: fixed;
             top: 70px;
@@ -191,13 +183,9 @@
             width: auto;
         }
 
-        /* ============================================
-           8. レスポンシブ対応
-        ============================================ */
+        /* 8. レスポンシブ対応 */
         @media (max-width: 768px) {
-            .middle-area {
-                flex-direction: column;
-            }
+            .middle-area { flex-direction: column; }
             aside.sidebar {
                 width: 100%;
                 border-right: none;
@@ -205,23 +193,36 @@
             }
         }
 
-        /* ============================================
-           9. フッター (オプション：今回の要望では削除可能)
-        ============================================ */
+        /* 9. フッター */
         footer.footer {
             background-color: #000;
             color: #fff;
             text-align: center;
             padding: 5px 15px;
         }
-    </style>
-
-    {% block extra_head %}{% endblock %}
+        .hotspot {
+            position: absolute;
+            cursor: pointer;
+            transition: opacity 0.3s, transform 0.3s;
+            max-width: 100%;
+            height: auto;
+        }
+        .hotspot:hover {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+        .hotspot-book { left: 15%; top: 60%; width: 8%; }
+        .hotspot-timer { left: 50%; top: 20%; width: 6%; }
+        .hotspot-pc { left: 70%; top: 50%; width: 10%; }
+        @media (max-width: 768px) {
+        .hotspot-book { left: 10%; top: 65%; width: 12%; }
+        .hotspot-timer { left: 50%; top: 25%; width: 10%; }
+        .hotspot-pc { left: 70%; top: 55%; width: 14%; }
+        }
+    </style>    {% block extra_head %}{% endblock %}
 </head>
-<body>
-    <body class="{% if request.session.display_mode == 'simple' %}simple-mode{% else %}normal-mode{% endif %}">
-
-    <!-- 1) トップバー：黒い細いバー、地球儀アイコンと「JP」 -->
+<body class="{% if request.session.display_mode == 'normal' %}normal-mode{% else %}simple-mode{% endif %}">
+    <!-- 1. トップバー -->
     <div class="topbar">
         <div class="lang-switch">
             <i class="bi bi-globe"></i>
@@ -230,7 +231,7 @@
         </div>
     </div>
 
-    <!-- 2) メインヘッダー -->
+    <!-- 2. メインヘッダー -->
     <header>
         <div class="logo">SmartLearn</div>
         <div class="user-info">
@@ -247,14 +248,17 @@
                     <button type="submit">Logout</button>
                 </form>
             </div>
+            <div class="mode-switch">
+                <a href="{% url 'switch_mode' 'simple' %}">Simple</a>
+                <a href="{% url 'switch_mode' 'normal' %}">Normal</a>
+            </div>
         </div>
     </header>
 
-    <!-- 3) 中央領域 -->
+    <!-- 3. 中央領域 -->
     <div class="middle-area">
         <!-- サイドバー -->
         <aside class="sidebar">
-            <h4>Menu</h4>
             <a href="{% url 'home' %}">
                 <i class="bi bi-house-door"></i>
                 <span class="en">Home</span>
@@ -336,7 +340,7 @@
         </main>
     </div>
 
-    <!-- フッター (必要なら表示、今回は追加しています) -->
+    <!-- フッター -->
     <footer class="footer">
         <p>&copy; 2025 SmartLearn. All rights reserved.</p>
     </footer>

@@ -16,20 +16,19 @@ urlpatterns = [
     path("announcements/", views.announcement_list, name="announcement_list"),
     path("announcements/create/", views.announcement_create, name="announcement_create"),
 
-    # グループごとの課題一覧（例: 特定グループの課題一覧を表示）
+    # グループ関連
     path("groups/<int:group_id>/tasks/", views.task_list, name="group_task_list"),
-    path('group/<int:group_id>/announcements/', views.announcement_list, name='announcement_list'),
-    path('group/<int:group_id>/announcements/create/', views.announcement_create, name='announcement_create'),
-    path('group/<int:group_id>/stream/', views.group_stream, name='group_stream'),
+    path("group/<int:group_id>/announcements/", views.announcement_list, name="announcement_list"),
+    path("group/<int:group_id>/announcements/create/", views.announcement_create, name="announcement_create"),
+    path("group/<int:group_id>/stream/", views.group_stream, name="group_stream"),
+    path("group/<int:group_id>/roster/", views.group_roster, name="group_roster"),
+    path("group/selection/", views.group_selection, name="group_selection"),
 
     # REST API
     path("api/tasks/", TaskListAPI.as_view(), name="task_list_api"),
     path("api/tasks/<int:task_id>/", TaskDetailAPI.as_view(), name="task_detail_api"),
-    path('group/<int:group_id>/roster/', views.group_roster, name='group_roster'),
-    path('teacher_dashboard/', views.tasks_dashboard, name='teacher_dashboard'),
-    path('tasks_by_subject/', views.tasks_by_subject, name='tasks_by_subject'),
-    path('group/<int:group_id>/roster/', views.group_roster, name='group_roster'),
-    path('group/<int:group_id>/stream/', views.group_stream, name='group_stream'),
-    path('group/selection/', views.group_selection, name='group_selection'),
 
+    # 教師用ダッシュボードと教科別課題
+    path("teacher_dashboard/", views.tasks_dashboard, name="teacher_dashboard"),
+    path("tasks_by_subject/", views.tasks_by_subject, name="tasks_by_subject"),
 ]

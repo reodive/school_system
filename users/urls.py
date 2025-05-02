@@ -3,6 +3,7 @@ from django.contrib.auth import views as auth_views
 from . import views
 from .forms import CustomAuthenticationForm
 from notifications.views import get_notifications
+from tasks.views import group_detail
 
 urlpatterns = [
     # Authentication
@@ -42,4 +43,5 @@ urlpatterns = [
     path('settings/notifications/', views.notification_settings, name='notification_settings'),    
 
     path('switch_mode/<str:mode>/', views.switch_mode, name='switch_mode'),
+    path('group/<int:group_id>/', group_detail, name='group_detail'),
 ]

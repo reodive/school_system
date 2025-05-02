@@ -1,120 +1,124 @@
-:root {
-  --primary-bg: #ffffff;
-  --primary-color: #333333;
-  --accent-color: #1a73e8;
-  --secondary-bg: #f2f2f2;
-  --transition-speed: 0.3s;
-  --font-family: 'Roboto', sans-serif;
+/* 全体の基本設定 */
+* {
+    box-sizing: border-box;
 }
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: #f5f5f5;
-  color: #333;
-  line-height: 1.6;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    background-color: #ffffff;
 }
 
-.container {
-  max-width: 1200px;
-  margin: auto;
-  padding: 20px;
+/* シンプルモードの背景 */
+body.simple-mode {
+    background: linear-gradient(180deg, #e0e6f2 0%, #d1d8e8 100%);
 }
 
+/* 通常モードの背景（部屋の画像を設定） */
+body.normal-mode {
+    background: url("/static/images/room_background.png") no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* ヘッダー（ナビゲーションバー） */
 header {
-  background: var(--primary-bg);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  position: sticky;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
-  padding: 1rem 0;
-  transition: padding var(--transition-speed);
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.navbar-custom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
+/* ナビゲーションリンク */
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 5px 10px;
+    transition: background 0.3s, color 0.3s;
+}
+nav a:hover {
+    background-color: #575757;
+    border-radius: 5px;
 }
 
-.navbar-custom .navbar-brand {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: var(--primary-color);
-  text-decoration: none;
-  transition: color var(--transition-speed);
+/* サイドバー */
+.sidebar {
+    width: 250px;
+    background-color: #ffffff;
+    border-right: 1px solid #e2cbff;
+    padding: 20px;
+    flex-shrink: 0;
+}
+.sidebar h4 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+.sidebar a {
+    display: block;
+    padding: 10px;
+    margin-bottom: 8px;
+    color: #333;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+.sidebar a:hover {
+    background-color: #f9d3ff;
 }
 
-.navbar-custom .navbar-brand:hover {
-  color: var(--accent-color);
+/* メインコンテンツ */
+.main-content {
+    flex: 1;
+    padding: 20px;
+    background-color: transparent;
 }
 
-.navbar-custom .nav-menu {
-  display: flex;
-  gap: 1rem;
+/* 中央領域（サイドバー + メインコンテンツ） */
+.middle-area {
+    display: flex;
+    flex: 1;
+    min-height: calc(100vh - 140px);  /* ヘッダーとフッター分の高さを引く */
 }
 
-.navbar-custom .nav-menu a {
-  color: var(--primary-color);
-  text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  transition: background var(--transition-speed), color var(--transition-speed);
-}
-
-.navbar-custom .nav-menu a:hover {
-  background-color: var(--accent-color);
-  color: #fff;
-}
-
-main.container {
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
-
+/* フッター */
 footer {
-  background: var(--primary-bg);
-  color: var(--primary-color);
-  text-align: center;
-  padding: 1rem 0;
-  font-size: 0.9rem;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+    width: 100%;
+    flex-shrink: 0;
+    /* 固定表示ではなく、自然な位置に表示（必要なら fixed にするが注意） */
 }
 
-.dashboard-container {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease-in-out;
+/* メッセージ表示エリア */
+.message-area {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    z-index: 1050;
+    width: auto;
 }
 
-.dashboard-container:hover {
-  transform: translateY(-3px);
-}
-
-
-/* アニメーション用クラス（Animate.cssが使えない場合、自作も可能） */
-.animate-fadeIn {
-  animation: fadeIn 0.8s ease-in-out both;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
+/* レスポンシブ対応 */
 @media (max-width: 768px) {
-  .navbar-custom {
-      flex-direction: column;
-  }
+    /* ヘッダー：ナビゲーションの縦並び */
+    header nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    /* サイドバーを上部に配置するか、折りたたむ */
+    .middle-area {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+    }
+    .main-content {
+        padding: 15px;
+    }
 }

@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 # ===== プロジェクトのルートディレクトリを取得 =====
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+LOGIN_URL = '/users/login/'
+
 # ===== .env ファイルのロード =====
 env_path = BASE_DIR / '.env'
 if env_path.exists():
