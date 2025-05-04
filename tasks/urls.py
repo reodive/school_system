@@ -31,4 +31,5 @@ urlpatterns = [
     # 教師用ダッシュボードと教科別課題
     path("teacher_dashboard/", views.tasks_dashboard, name="teacher_dashboard"),
     path("tasks_by_subject/", views.tasks_by_subject, name="tasks_by_subject"),
+    path('timer/', views.timer_view, name='timer_view'),
 ]

@@ -49,6 +49,9 @@ SERVICE_ACCOUNT_FILE = "credentials.json"
 def home(request):
     return render(request, "home.html")
 
+def timer_view(request):
+    return render(request, 'timer.html')
+
 @login_required
 def task_list(request):
     sort_by = request.GET.get('sort', 'deadline')

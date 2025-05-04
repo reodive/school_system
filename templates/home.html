@@ -5,14 +5,18 @@
 
 {% block content %}
 {% if request.session.display_mode == 'normal' %}
-  <!-- 通常モード（画像モード） -->
-  <!-- 背景は base.html の normal-mode で設定されるので、ここではオーバーレイのみ配置 -->
-  <div class="room-overlay" style="position: relative; width: 100%; height: 100vh;">
-        <!-- ホットスポット：本 -->
-        <img src="{% static 'images/book_hotspot.heic' %}" alt="Book Button" class="hotspot hotspot-book" onclick="window.location.href='{% url 'task_list' %}'">
-        <!-- ホットスポット：パソコン -->
-        <img src="{% static 'images/pc_hotspot.heic' %}" alt="Dashboard" class="hotspot hotspot-pc" onclick="zoomInPC()">
+<div class="overlay-buttons">
+    <div class="object-row">
+      <img src="{% static 'images/watch.png' %}" alt="タイマー" class="obj-btn clock-btn" onclick="location.href='{% url 'timer_view' %}'">
+      <img src="{% static 'images/book.png' %}" alt="課題一覧" class="obj-btn book-btn" onclick="location.href='{% url 'task_list' %}'">
+      <img src="{% static 'images/desktop.png' %}" alt="ダッシュボード" class="obj-btn pc-btn" onclick="zoomInPC()">
+    </div>
+  
+    <div class="screen-wrapper">
+      <iframe id="virtual-screen" src="" width="640" height="360" frameborder="0"></iframe>
+    </div>
   </div>
+  
 {% else %}
   <!-- シンプルモード -->
   <!-- 校舎イメージ -->
@@ -128,6 +132,16 @@
           <hr style="width: 80%; border-top: 1px solid #ffecb3; margin: 10px auto;">
           <p style="font-size: 0.9rem; margin: 0; text-align: center;">You have new messages.</p>
       </div>
+      <script>
+        function zoomInPC() {
+          const pc = document.querySelector(".pc-btn");
+          pc.style.transform = "scale(2.5)";
+          pc.style.transition = "transform 0.5s ease";
+          setTimeout(() => {
+            location.href = "{% url 'teacher_dashboard' %}";
+          }, 500);
+        }
+      </script>
   </div>
 {% endif %}
 {% endblock %}
