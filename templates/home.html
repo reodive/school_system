@@ -5,18 +5,74 @@
 
 {% block content %}
 {% if request.session.display_mode == 'normal' %}
-<div class="overlay-buttons">
-    <div class="object-row">
-      <img src="{% static 'images/watch.png' %}" alt="タイマー" class="obj-btn clock-btn" onclick="location.href='{% url 'timer_view' %}'">
-      <img src="{% static 'images/book.png' %}" alt="課題一覧" class="obj-btn book-btn" onclick="location.href='{% url 'task_list' %}'">
-      <img src="{% static 'images/desktop.png' %}" alt="ダッシュボード" class="obj-btn pc-btn" onclick="zoomInPC()">
-    </div>
-  
-    <div class="screen-wrapper">
-      <iframe id="virtual-screen" src="" width="640" height="360" frameborder="0"></iframe>
+  <div class="overlay-container">
+    <!-- 背景画像 -->
+    <img src="{% static 'images/room_background.png' %}" alt="背景" class="background-img">
+
+    <!-- ホットスポット（ボタン） -->
+    <div class="overlay-buttons">
+      <!-- PCアイコン：ダッシュボード -->
+      <img src="{% static 'images/desktop.png' %}"
+           class="obj-btn pc-btn"
+           alt="PC"
+           onclick="openModal('{% url 'teacher_dashboard' %}')">
+
+      <!-- 本アイコン：課題一覧 -->
+      <img src="{% static 'images/book.png' %}"
+           class="obj-btn book-btn"
+           alt="本"
+           onclick="openModal('{% url 'task_list' %}')">
+
+      <!-- 時計アイコン：タイマー -->
+      <img src="{% static 'images/watch.png' %}"
+           class="obj-btn clock-btn"
+           alt="時計"
+           onclick="openModal('{% url 'timer_view' %}')">
     </div>
   </div>
-  
+
+  <!-- モーダル（iframe埋め込み用） -->
+  <div id="modalOverlay" class="pc-screen" onclick="closeModal()">
+    <div class="pc-box" onclick="event.stopPropagation()">
+      <button class="close-btn" onclick="closeModal()">×</button>
+      <iframe id="modalFrame"
+              src=""
+              frameborder="0"
+              width="100%"
+              height="80%"></iframe>
+    </div>
+  </div>
+
+  <!-- Chart.js CDN（進捗グラフ用、必要なければ読み込まなくてOK） -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- モーダル操作用スクリプト -->
+  <script>
+      async function openModal(url) {
+    const frame   = document.getElementById('modalFrame');
+    const overlay = document.getElementById('modalOverlay');
+
+    frame.src              = url;
+    overlay.style.display  = 'flex';
+    document.querySelector('.overlay-container').classList.add('no-pointer');
+
+    // teacher_dashboard 内にチャート canvas があればここで描画呼び出し
+    if (url.includes('/dashboard/teacher/')) {
+      // iframe がロードされるのを待ってから呼び出す
+      frame.onload = () => {
+        frame.contentWindow.renderProgressChart();
+      };
+    }
+  }
+    function closeModal() {
+      // モーダルを閉じ、iframe をクリア
+      const overlay = document.getElementById('modalOverlay');
+      const frame = document.getElementById('modalFrame');
+      overlay.style.display = 'none';
+      frame.src = '';
+      document.querySelector('.overlay-container').classList.remove('no-pointer');
+    }
+  </script>
+
 {% else %}
   <!-- シンプルモード -->
   <!-- 校舎イメージ -->
@@ -141,7 +197,66 @@
             location.href = "{% url 'teacher_dashboard' %}";
           }, 500);
         }
-      </script>
-  </div>
+  function togglePCScreen(e) {
+    const screen = document.getElementById('pcScreen');
+    const container = document.querySelector('.overlay-container');
+    const iframe = document.getElementById('virtual-screen');
+
+    if (screen.style.display === 'none') {
+      // ダッシュボード開く
+      // 先生用ダッシュボードの URL をセット
+      iframe.src = "{% url 'teacher_dashboard' %}";
+      screen.style.display = 'flex';
+      container.classList.add('no-pointer');
+    } else {
+      // 閉じる
+      screen.style.display = 'none';
+      container.classList.remove('no-pointer');
+      // 読み込みをリセット（必要なら）
+      iframe.src = "";
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('.pc-btn').addEventListener('click', togglePCScreen);
+  });
+
+
+  <!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  // 白い画面が開かれたタイミングでグラフ描画
+  document.querySelector('.pc-btn').addEventListener('click', () => {
+    // 少し遅延を入れて要素確保
+    setTimeout(renderProgressChart, 100);
+  });
+
+  function renderProgressChart() {
+    const ctx = document.getElementById('progressChart').getContext('2d');
+    // 前回描画があれば破棄
+    if (window.progressChartInstance) {
+      window.progressChartInstance.destroy();
+    }
+    window.progressChartInstance = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Completed', 'Remaining'],
+        datasets: [{
+          data: [75, 25],
+          backgroundColor: ['#4caf50', '#e0e0e0'],
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        cutout: '70%',
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false },
+        },
+      }
+    });
+  }
+</script>
+
 {% endif %}
 {% endblock %}

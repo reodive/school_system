@@ -52,6 +52,15 @@ def home(request):
 def timer_view(request):
     return render(request, 'timer.html')
 
+from django.http import JsonResponse
+
+def progress_api(request):
+    # 例: ユーザーの完了済みタスク数と総タスク数を取得
+    completed = Task.objects.filter(user=request.user, done=True).count()
+    total     = Task.objects.filter(user=request.user).count()
+    return JsonResponse({'completed': completed, 'total': total})
+
+
 @login_required
 def task_list(request):
     sort_by = request.GET.get('sort', 'deadline')

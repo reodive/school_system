@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from .views import home, TaskDetailAPI, TaskListAPI, submit_task
+from .views import progress_api
 
 urlpatterns = [
     # ホームページ
@@ -32,4 +33,7 @@ urlpatterns = [
     path("teacher_dashboard/", views.tasks_dashboard, name="teacher_dashboard"),
     path("tasks_by_subject/", views.tasks_by_subject, name="tasks_by_subject"),
     path('timer/', views.timer_view, name='timer_view'),
+    # urls.py
+    path('api/progress/', progress_api, name='progress_api'),
+
 ]

@@ -124,44 +124,50 @@
         }
 
         /* 5. サイドバー */
-        aside.sidebar {
-            width: 250px;
-            background: linear-gradient(160deg, rgb(249, 241, 255));
-            padding: 20px;
-            flex-shrink: 0;
-        }
-        aside.sidebar h4 {
-            margin: 0 0 20px;
-            font-family: 'Yeseva One', sans-serif;
-            font-size: 2rem;
-            letter-spacing: 1px;
-            color: hsl(0, 0%, 0%);
-            text-align: center;
-            font-weight: bold;
-        }
-        aside.sidebar a {
-            display: block;
-            padding: 10px;
-            margin-bottom: 10px;
-            color: #000000;
-            text-decoration: none;
-            border-radius: 4px;
-            background-color: rgba(199, 129, 222, 0.05);
-            transition: all 0.3s ease;
-        }
-        aside.sidebar a:hover {
-            background-color: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 2px 6px rgba(240, 175, 255, 0.3);
-        }
-        aside.sidebar a i { margin-right: 8px; }
-        aside.sidebar a .en {
-            font-family: 'Yeseva One', sans-serif;
-            margin-right: 6px;
-        }
-        aside.sidebar a .jp {
-            font-size: 0.7rem;
-            opacity: 0.7;
-        }
+aside.sidebar {
+  width: 60px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  padding: 10px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 1px solid #ddd;
+  transition: width 0.3s ease;
+}
+
+aside.sidebar a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 48px;
+  width: 48px;
+  margin: 8px 0;
+  color: #333;
+  background-color: transparent;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+  font-size: 1.5rem;
+}
+
+aside.sidebar a:hover {
+  background-color: #e5e5f7;
+  box-shadow: 0 2px 6px rgba(150, 150, 255, 0.2);
+}
+
+aside.sidebar a.active::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  background-color: #5e5eff;
+  border-radius: 50%;
+}
+
         body.normal-mode aside.sidebar {
             width: 200px;    /* サイドバーの幅を狭くする */
             padding: 10px;   /* 余白も少なめに */
@@ -241,69 +247,49 @@
     <div class="middle-area">
         <!-- サイドバー -->
         <aside class="sidebar">
-            <a href="{% url 'home' %}">
-                <i class="bi bi-house-door"></i>
-                <span class="en">Home</span>
-                <span class="jp">ホーム</span>
-            </a>
-            <a href="{% url 'task_list' %}">
-                <i class="bi bi-folder2-open"></i>
-                <span class="en">Tasks</span>
-                <span class="jp">課題一覧</span>
-            </a>
-            <a href="{% url 'dashboard' %}">
-                <i class="bi bi-bar-chart"></i>
-                <span class="en">Dashboard</span>
-                <span class="jp">ダッシュボード</span>
-            </a>
-            <a href="{% url 'announcement_list' %}">
-                <i class="bi bi-megaphone"></i>
-                <span class="en">News</span>
-                <span class="jp">お知らせ</span>
-            </a>
-            {% if group %}
-                <a href="{% url 'group_stream' group.id %}">
-                    <i class="bi bi-clock-history"></i>
-                    <span class="en">Stream</span>
-                    <span class="jp">グループ</span>
-                </a>
-                <a href="{% url 'group_roster' group.id %}">
-                    <i class="bi bi-people"></i>
-                    <span class="en">Roster</span>
-                    <span class="jp">名簿</span>
-                </a>
-            {% else %}
-                <a href="{% url 'group_selection' %}">
-                    <i class="bi bi-people"></i>
-                    <span class="en">Groups</span>
-                    <span class="jp">グループ選択</span>
-                </a>
-            {% endif %}
-            <a href="{% url 'teacher_dashboard' %}">
-                <i class="bi bi-graph-up"></i>
-                <span class="en">Subjects</span>
-                <span class="jp">教科別</span>
-            </a>
-            <a href="{% url 'calendar_view' %}">
-                <i class="bi bi-calendar"></i>
-                <span class="en">Calendar</span>
-                <span class="jp">カレンダー</span>
-            </a>
-            <a href="{% url 'message_list' %}">
-                <i class="bi bi-chat-dots"></i>
-                <span class="en">Chat</span>
-                <span class="jp">チャット</span>
-            </a>
-            <a href="{% url 'group_chat_room_list' %}">
-                <i class="bi bi-people"></i>
-                <span class="en">G-Chat</span>
-                <span class="jp">グループ</span>
-            </a>
-            <a href="{% url 'profile_settings' %}">
-                <i class="bi bi-person-lines-fill"></i>
-                <span class="en">Profile</span>
-                <span class="jp">設定</span>
-            </a>
+            <!-- 変更後 -->
+        <aside class="sidebar">
+    <a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}" title="ホーム">
+        <i class="bi bi-house-door"></i>
+    </a>
+    <a href="{% url 'task_list' %}" class="{% if '/tasks' in request.path %}active{% endif %}" title="課題一覧">
+        <i class="bi bi-folder2-open"></i>
+    </a>
+    <a href="{% url 'dashboard' %}" class="{% if '/dashboard' in request.path %}active{% endif %}" title="ダッシュボード">
+        <i class="bi bi-bar-chart"></i>
+    </a>
+    <a href="{% url 'announcement_list' %}" class="{% if '/news' in request.path %}active{% endif %}" title="お知らせ">
+        <i class="bi bi-megaphone"></i>
+    </a>
+    {% if group %}
+        <a href="{% url 'group_stream' group.id %}" class="{% if '/stream' in request.path %}active{% endif %}" title="ストリーム">
+            <i class="bi bi-clock-history"></i>
+        </a>
+        <a href="{% url 'group_roster' group.id %}" class="{% if '/roster' in request.path %}active{% endif %}" title="名簿">
+            <i class="bi bi-people"></i>
+        </a>
+    {% else %}
+        <a href="{% url 'group_selection' %}" class="{% if '/groups' in request.path %}active{% endif %}" title="グループ選択">
+            <i class="bi bi-people"></i>
+        </a>
+    {% endif %}
+    <a href="{% url 'teacher_dashboard' %}" class="{% if '/subjects' in request.path %}active{% endif %}" title="教科別">
+        <i class="bi bi-graph-up"></i>
+    </a>
+    <a href="{% url 'calendar_view' %}" class="{% if '/calendar' in request.path %}active{% endif %}" title="カレンダー">
+        <i class="bi bi-calendar"></i>
+    </a>
+    <a href="{% url 'message_list' %}" class="{% if '/messages' in request.path %}active{% endif %}" title="チャット">
+        <i class="bi bi-chat-dots"></i>
+    </a>
+    <a href="{% url 'group_chat_room_list' %}" class="{% if '/group-chat' in request.path %}active{% endif %}" title="グループチャット">
+        <i class="bi bi-people"></i>
+    </a>
+    <a href="{% url 'profile_settings' %}" class="{% if '/profile' in request.path %}active{% endif %}" title="プロフィール">
+        <i class="bi bi-person-lines-fill"></i>
+    </a>
+</aside>
+
         </aside>
 
         <!-- メインコンテンツ -->
