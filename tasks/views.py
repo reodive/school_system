@@ -1,6 +1,7 @@
 import logging
 import datetime
 from datetime import timedelta
+from datetime import datetime
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
@@ -38,6 +39,11 @@ def group_detail(request, group_id):
         'announcements': announcements,
     })
 
+from django.shortcuts import render
+
+def timer_view(request):
+    return render(request, 'tasks/timer.html')
+
 def group_selection(request):
     groups = Group.objects.all()
     return render(request, 'tasks/group_selection.html', {'groups': groups})
@@ -45,12 +51,12 @@ def group_selection(request):
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 SERVICE_ACCOUNT_FILE = "credentials.json"
 
-@login_required
 def home(request):
-    return render(request, "home.html")
-
-def timer_view(request):
-    return render(request, 'timer.html')
+    request.session['display_mode'] = 'simple'  # ← ここが肝心。テンプレートが参照しているのはセッション変数
+    context = {
+        'current_date': datetime.now(),
+    }
+    return render(request, 'home.html', context)
 
 from django.http import JsonResponse
 

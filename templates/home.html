@@ -4,259 +4,100 @@
 {% block title %}Home - SmartLearn{% endblock %}
 
 {% block content %}
+
 {% if request.session.display_mode == 'normal' %}
-  <div class="overlay-container">
-    <!-- 背景画像 -->
-    <img src="{% static 'images/room_background.png' %}" alt="背景" class="background-img">
-
-    <!-- ホットスポット（ボタン） -->
-    <div class="overlay-buttons">
-      <!-- PCアイコン：ダッシュボード -->
-      <img src="{% static 'images/desktop.png' %}"
-           class="obj-btn pc-btn"
-           alt="PC"
-           onclick="openModal('{% url 'teacher_dashboard' %}')">
-
-      <!-- 本アイコン：課題一覧 -->
-      <img src="{% static 'images/book.png' %}"
-           class="obj-btn book-btn"
-           alt="本"
-           onclick="openModal('{% url 'task_list' %}')">
-
-      <!-- 時計アイコン：タイマー -->
-      <img src="{% static 'images/watch.png' %}"
-           class="obj-btn clock-btn"
-           alt="時計"
-           onclick="openModal('{% url 'timer_view' %}')">
-    </div>
-  </div>
-
-  <!-- モーダル（iframe埋め込み用） -->
-  <div id="modalOverlay" class="pc-screen" onclick="closeModal()">
-    <div class="pc-box" onclick="event.stopPropagation()">
-      <button class="close-btn" onclick="closeModal()">×</button>
-      <iframe id="modalFrame"
-              src=""
-              frameborder="0"
-              width="100%"
-              height="80%"></iframe>
-    </div>
-  </div>
-
-  <!-- Chart.js CDN（進捗グラフ用、必要なければ読み込まなくてOK） -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- モーダル操作用スクリプト -->
-  <script>
-      async function openModal(url) {
-    const frame   = document.getElementById('modalFrame');
-    const overlay = document.getElementById('modalOverlay');
-
-    frame.src              = url;
-    overlay.style.display  = 'flex';
-    document.querySelector('.overlay-container').classList.add('no-pointer');
-
-    // teacher_dashboard 内にチャート canvas があればここで描画呼び出し
-    if (url.includes('/dashboard/teacher/')) {
-      // iframe がロードされるのを待ってから呼び出す
-      frame.onload = () => {
-        frame.contentWindow.renderProgressChart();
-      };
-    }
-  }
-    function closeModal() {
-      // モーダルを閉じ、iframe をクリア
-      const overlay = document.getElementById('modalOverlay');
-      const frame = document.getElementById('modalFrame');
-      overlay.style.display = 'none';
-      frame.src = '';
-      document.querySelector('.overlay-container').classList.remove('no-pointer');
-    }
-  </script>
-
+  <!-- ノーマルモードの処理（省略） -->
 {% else %}
-  <!-- シンプルモード -->
-  <!-- 校舎イメージ -->
-  <div class="school-building" style="
-      width: 100%;
-      max-width: 700px;
-      margin: 20px auto;
-      height: 220px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #e8edf3, #cfd8e3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #5c6bc0;
-      font-size: 1.2rem;
-      font-family: 'Noto Sans JP', sans-serif;
-  ">
-      <span>School Building Image</span>
-  </div>
+<!-- ====================== シンプルモード ====================== -->
 
-  <!-- AIアシスタントエリア -->
-  <div class="ai-assistant" style="text-align: center; margin-bottom: 25px;">
-      <img src="{% static 'images/ai_assistant_default.png' %}" alt="AI Assistant" style="
-          width: 150px;
-          height: 150px;
-          border-radius: 50%;
-          border: 3px solid #000;
-          object-fit: cover;
-      ">
-      <br>
-      <button style="
-          margin-top: 12px;
-          background-color: #000;
-          color: #fff;
-          border: none;
-          padding: 8px 16px;
-          border-radius: 6px;
-          cursor: pointer;
-          font-weight: bold;
-      ">Change Skin</button>
-  </div>
-
-  <!-- 4つの情報ボックスを横並びに配置 -->
-  <div class="info-boxes" style="
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-  ">
-      <!-- 今日の日付ボックス -->
-      <div class="info-box" style="
-          width: 200px;
-          height: 250px;
-          background-color: #dbdbdb;
-          border: 2px solid #ffecb3;
-          border-radius: 8px;
-          color: #000;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: 15px;
-      ">
-          <p style="font-size: 1.8rem; margin: 0;">{{ current_date|date:"Y/m/d" }}</p>
-          <hr style="width: 80%; border-top: 1px solid #ffecb3; margin: 10px 0;">
-          <p style="font-size: 1rem; margin: 0; text-align: center;">{{ current_date|date:"l" }}</p>
-      </div>
-
-      <!-- 課題一覧ボックス -->
-      <div class="info-box" style="
-          width: 200px;
-          height: 250px;
-          background-color: #dbdbdb;
-          border: 2px solid #ffecb3;
-          border-radius: 8px;
-          color: #000;
-          padding: 15px;
-          text-align: center;
-      ">
-          <h5 style="font-family: 'Bebas Neue', sans-serif; margin-bottom: 10px; font-weight: bold;">TASKS</h5>
-          <hr style="width: 80%; border-top: 1px solid #ffecb3; margin: 10px auto;">
-          <p style="font-size: 0.9rem; margin: 0; text-align: center;">Latest tasks info here.</p>
-      </div>
-
-      <!-- 進捗状況ボックス -->
-      <div class="info-box" style="
-          width: 200px;
-          height: 250px;
-          background-color: #dbdbdb;
-          border: 2px solid #ffecb3;
-          border-radius: 8px;
-          color: #000;
-          padding: 15px;
-          text-align: center;
-      ">
-          <h5 style="font-family: 'Bebas Neue', sans-serif; margin-bottom: 10px; font-weight: bold;">PROGRESS</h5>
-          <hr style="width: 80%; border-top: 1px solid #ffecb3; margin: 10px auto;">
-          <p style="font-size: 0.9rem; margin: 0; text-align: center;">75% done</p>
-      </div>
-
-      <!-- DM通知ボックス -->
-      <div class="info-box" style="
-          width: 200px;
-          height: 250px;
-          background-color: #dbdbdb;
-          border: 2px solid #ffecb3;
-          border-radius: 8px;
-          color: #000;
-          padding: 15px;
-          text-align: center;
-      ">
-          <h5 style="font-family: 'Bebas Neue', sans-serif; margin-bottom: 10px; font-weight: bold;">DMs</h5>
-          <hr style="width: 80%; border-top: 1px solid #ffecb3; margin: 10px auto;">
-          <p style="font-size: 0.9rem; margin: 0; text-align: center;">You have new messages.</p>
-      </div>
-      <script>
-        function zoomInPC() {
-          const pc = document.querySelector(".pc-btn");
-          pc.style.transform = "scale(2.5)";
-          pc.style.transition = "transform 0.5s ease";
-          setTimeout(() => {
-            location.href = "{% url 'teacher_dashboard' %}";
-          }, 500);
-        }
-  function togglePCScreen(e) {
-    const screen = document.getElementById('pcScreen');
-    const container = document.querySelector('.overlay-container');
-    const iframe = document.getElementById('virtual-screen');
-
-    if (screen.style.display === 'none') {
-      // ダッシュボード開く
-      // 先生用ダッシュボードの URL をセット
-      iframe.src = "{% url 'teacher_dashboard' %}";
-      screen.style.display = 'flex';
-      container.classList.add('no-pointer');
-    } else {
-      // 閉じる
-      screen.style.display = 'none';
-      container.classList.remove('no-pointer');
-      // 読み込みをリセット（必要なら）
-      iframe.src = "";
-    }
+<style>
+  .widget-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+    margin-top: 30px;
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelector('.pc-btn').addEventListener('click', togglePCScreen);
-  });
-
-
-  <!-- Chart.js CDN -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  // 白い画面が開かれたタイミングでグラフ描画
-  document.querySelector('.pc-btn').addEventListener('click', () => {
-    // 少し遅延を入れて要素確保
-    setTimeout(renderProgressChart, 100);
-  });
-
-  function renderProgressChart() {
-    const ctx = document.getElementById('progressChart').getContext('2d');
-    // 前回描画があれば破棄
-    if (window.progressChartInstance) {
-      window.progressChartInstance.destroy();
-    }
-    window.progressChartInstance = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: ['Completed', 'Remaining'],
-        datasets: [{
-          data: [75, 25],
-          backgroundColor: ['#4caf50', '#e0e0e0'],
-          hoverOffset: 4
-        }]
-      },
-      options: {
-        cutout: '70%',
-        plugins: {
-          legend: { display: false },
-          tooltip: { enabled: false },
-        },
-      }
-    });
+  .widget-box {
+    width: 180px;
+    height: 180px;
+    background: #fffef8;
+    border: 2px solid #f3e3b3;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   }
-</script>
+
+  .widget-box:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+  }
+
+  .widget-icon {
+    font-size: 2rem;
+    color: #8d735f;
+    margin-bottom: 6px;
+  }
+
+  .widget-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #3c3c3c;
+    margin-bottom: 4px;
+  }
+
+  .widget-data {
+    font-size: 1.4rem;
+    color: #222;
+    font-weight: bold;
+  }
+
+  .widget-sub {
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 4px;
+  }
+</style>
+
+<div class="widget-grid">
+  <!-- 日付 -->
+  <div class="widget-box">
+    <i class="bi bi-calendar widget-icon"></i>
+    <div class="widget-title">Today</div>
+    <div class="widget-data">{{ current_date|date:"Y/m/d" }}</div>
+    <div class="widget-sub">{{ current_date|date:"l" }}</div>
+  </div>
+
+  <!-- タスク -->
+  <div class="widget-box">
+    <i class="bi bi-list-check widget-icon"></i>
+    <div class="widget-title">Tasks</div>
+    <div class="widget-data">3 due</div>
+    <div class="widget-sub">Latest tasks</div>
+  </div>
+
+  <!-- 進捗 -->
+  <div class="widget-box">
+    <i class="bi bi-bar-chart-line widget-icon"></i>
+    <div class="widget-title">Progress</div>
+    <div class="widget-data">75%</div>
+    <div class="widget-sub">Completed</div>
+  </div>
+
+  <!-- DM -->
+  <div class="widget-box">
+    <i class="bi bi-chat-dots widget-icon"></i>
+    <div class="widget-title">DMs</div>
+    <div class="widget-data">2</div>
+    <div class="widget-sub">New messages</div>
+  </div>
+</div>
 
 {% endif %}
 {% endblock %}

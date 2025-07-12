@@ -1,218 +1,141 @@
 /*----------------------------------------
-  1. ベース設定
+  白 × ベージュ 洗練テーマ for simple-mode
 ----------------------------------------*/
-* {
-  box-sizing: border-box;
-}
-body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background-color: #fff;
-  user-select: none;
-}
+
 body.simple-mode {
-  background: linear-gradient(180deg, #e0e6f2 0%, #d1d8e8 100%);
+  background-color: #fdfdfd;
+  font-family: 'Noto Sans JP', 'Helvetica Neue', sans-serif;
+  color: #333;
 }
 
-/*----------------------------------------
-  2. ヘッダー（前面に表示）
-----------------------------------------*/
-header {
+/* AIアシスタント（※現在非表示だがテーマ残すなら） */
+body.simple-mode .ai-assistant img {
+  border: 3px solid #8b7e74;
+}
+body.simple-mode .ai-assistant button {
+  background-color: #8b7e74;
+  color: #fff;
+}
+body.simple-mode .ai-assistant button:hover {
+  background-color: #6f655d;
+}
+
+/* 情報ボックス */
+body.simple-mode .info-box {
+  background-color: #f5f1ec !important;
+  border: 1px solid #e0ddd8 !important;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  color: #333;
+  transition: transform 0.2s ease;
+}
+body.simple-mode .info-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+body.simple-mode .info-box h5 {
+  color: #8b7e74;
+  letter-spacing: 1px;
+}
+
+/* footer（ベージュ系洗練） */
+body.simple-mode footer {
+  background-color: #f0ebe7;
+  color: #8b7e74;
+  border-top: 1px solid #dcd7d0;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 0.9rem;
+}
+
+/* ▼ ウィジェットエリア */
+.widget-area {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  padding: 20px;
+}
+
+/* ▼ ウィジェット共通スタイル */
+.widget-box {
+  background-color: #fffefc;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 15px;
+  text-align: center;
+  font-family: 'Noto Sans JP', sans-serif;
   position: relative;
+  transition: transform 0.2s;
+  cursor: grab;
+}
+
+.widget-box:hover {
+  transform: translateY(-2px);
+}
+
+/* ▼ ウィジェットサイズ（S・M・L） */
+.widget-size-small {
+  width: 160px;
+  height: 130px;
+}
+.widget-size-medium {
+  width: 240px;
+  height: 160px;
+}
+.widget-size-large {
+  width: 400px;
+  height: 200px;
+}
+
+/* ▼ 中身構成 */
+.widget-header {
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+.widget-body {
+  font-size: 0.9rem;
+  color: #333;
+}
+.widget-body span {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+/* ▼ ウィジェット編集アイコン＋メニュー */
+.widget-toolbar {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+}
+.edit-widget-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.widget-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 25px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   z-index: 1000;
 }
-
-.pc-screen {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  display: none;               /* JSで flex に切り替え */
-  justify-content: center;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 9999;
-}
-
-.pc-box {
-  position: relative;
-  background: #fff;
-  width: 80%;
-  max-width: 900px;
-  height: 80%;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-  overflow: hidden;
-}
-
-.close-btn {
-  position: absolute;
-  top: 8px; right: 8px;
-  border: none;
-  background: transparent;
-  font-size: 1.5rem;
-  cursor: pointer;
-  z-index: 10;
-}
-
-.pc-box canvas {
-  margin: 10px 0;
-}
-#progressText {
-  font-size: 1rem;
-  margin-bottom: 12px;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translate(-50%, -55%); }
-  to   { opacity: 1; transform: translate(-50%, -50%); }
-}
-/* 「ホットスポット」部分だけ無効化 */
-.overlay-container.no-pointer .hotspots {
-  pointer-events: none;
-}
-
-/*----------------------------------------
-  3. レイアウト構成
-----------------------------------------*/
-.middle-area {
-  display: flex;
-  min-height: 100vh;
-}
-aside.sidebar {
-  width: 60px;
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(20px);
-  padding: 10px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-right: 1px solid #ddd;
-  transition: width 0.3s ease;
-}
-
-aside.sidebar a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 48px;
-  width: 48px;
-  margin: 8px 0;
-  color: #333;
-  background-color: transparent;
-  border-radius: 12px;
-  transition: all 0.3s ease;
-  position: relative;
-  font-size: 1.5rem;
-}
-
-aside.sidebar a:hover {
-  background-color: #e5e5f7;
-  box-shadow: 0 2px 6px rgba(150, 150, 255, 0.2);
-}
-
-aside.sidebar a.active::before {
-  content: "";
-  position: absolute;
-  left: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 6px;
-  height: 6px;
-  background-color: #5e5eff;
-  border-radius: 50%;
-}
-
-.main-content {
-  flex: 1;
-  padding: 0;
-  position: relative; /* 背景やコンテンツを中に収めるため */
-  z-index: 1;
-}
-
-/*----------------------------------------
-  4. 背景画像 + ボタンコンテナ
-----------------------------------------*/
-.overlay-container {
-  position: relative;
-  width: 100%;
-  max-width: 1920px;
-  aspect-ratio: 3840 / 2088;
-  margin: 0 auto;
-  overflow: hidden;
-  z-index: 1; /* ヘッダーより下に */
-}
-.background-img {
-  width: 100%;
-  height: auto;
+.widget-menu button {
   display: block;
-  user-select: none;
-  pointer-events: none;
-}
-
-/*----------------------------------------
-  5. ボタン配置（背景上のホットスポット）
-----------------------------------------*/
-.overlay-buttons {
-  position: absolute;
-  top: 0; left: 0;
+  padding: 8px 12px;
   width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.obj-btn {
-  position: absolute;
-  width: var(--btn-width);
-  top: var(--btn-top);
-  left: var(--btn-left);
-  transform: translate(-50%, -50%);
-  height: auto;
-  pointer-events: auto;
+  background: none;
+  border: none;
+  text-align: left;
   cursor: pointer;
-  transition: transform 0.3s ease, filter 0.3s ease;
-  z-index: 10;
+  font-size: 0.85rem;
 }
-.obj-btn:hover {
-  transform: translate(-50%, -50%) scale(1.08);
-  filter: brightness(0.85);
-}
-
-/*----------------------------------------
-  6. 各ボタンの個別設定（％指定）
-  ※ 3840x2088背景画像の中での位置割合
-----------------------------------------*/
-.pc-btn {
-  --btn-width: 45%;
-  --btn-top: 74%;
-  --btn-left: 51%;
-}
-.book-btn {
-  --btn-width: 9%;
-  --btn-top: 75%;
-  --btn-left: 31%;
-}
-.clock-btn {
-  --btn-width: 10%;
-  --btn-top: 69%;
-  --btn-left: 80%;
-}
-
-/*----------------------------------------
-  7. モード切替
-----------------------------------------*/
-body.simple-mode .overlay-container {
-  display: none;
-}
-
-/*----------------------------------------
-  8. レスポンシブ調整（スマホ向け）
-----------------------------------------*/
-@media (max-width: 768px) {
-  .sidebar {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid #ccc;
-  }
-  .middle-area {
-    flex-direction: column;
-  }
+.widget-menu button:hover {
+  background-color: #f0f0f0;
 }

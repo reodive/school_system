@@ -2,8 +2,11 @@ from django.urls import path
 from . import views
 from .views import home, TaskDetailAPI, TaskListAPI, submit_task
 from .views import progress_api
+from django.contrib.auth.decorators import login_required
+from .views import task_list
 
 urlpatterns = [
+    path("tasks/", login_required(task_list), name="task_list"),
     # ホームページ
     path("", home, name="home"),
 
