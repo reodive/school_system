@@ -32,6 +32,7 @@
     align-items: center;
     justify-content: center;
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    position: relative;
   }
 
   .widget-box:hover {
@@ -63,41 +64,195 @@
     color: #555;
     margin-top: 4px;
   }
+
+  .widget-toolbar {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+  }
+
+  .edit-widget-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+
+  .widget-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 25px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    z-index: 10;
+  }
+
+  .widget-menu button {
+    display: block;
+    padding: 8px 12px;
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+
+  .widget-menu button:hover {
+    background-color: #f0f0f0;
+  }
+  .btn-edit-widgets {
+  background-color: #f3e3b3;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #4e3d2f;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-edit-widgets:hover {
+  background-color: #e2c891;
+}
+
 </style>
 
 <div class="widget-grid">
-  <!-- 日付 -->
-  <div class="widget-box">
+
+  <!-- Today -->
+  <div class="widget-box" data-type="calendar" data-size="small">
+    <div class="widget-toolbar">
+      <button class="edit-widget-btn">⋮</button>
+      <div class="widget-menu">
+        <button class="delete-widget">🗑 Delete</button>
+        <button class="resize-widget">📏 Resize</button>
+        <button class="change-widget">🔁 Change</button>
+      </div>
+    </div>
     <i class="bi bi-calendar widget-icon"></i>
     <div class="widget-title">Today</div>
     <div class="widget-data">{{ current_date|date:"Y/m/d" }}</div>
     <div class="widget-sub">{{ current_date|date:"l" }}</div>
   </div>
 
-  <!-- タスク -->
-  <div class="widget-box">
+  <!-- Tasks -->
+  <div class="widget-box" data-type="tasks">
+    <div class="widget-toolbar">
+      <button class="edit-widget-btn">⋮</button>
+      <div class="widget-menu">
+        <button class="delete-widget">🗑 Delete</button>
+        <button class="resize-widget">📏 Resize</button>
+        <button class="change-widget">🔁 Change</button>
+      </div>
+    </div>
     <i class="bi bi-list-check widget-icon"></i>
     <div class="widget-title">Tasks</div>
     <div class="widget-data">3 due</div>
     <div class="widget-sub">Latest tasks</div>
   </div>
 
-  <!-- 進捗 -->
-  <div class="widget-box">
+  <!-- Progress -->
+  <div class="widget-box" data-type="progress">
+    <div class="widget-toolbar">
+      <button class="edit-widget-btn">⋮</button>
+      <div class="widget-menu">
+        <button class="delete-widget">🗑 Delete</button>
+        <button class="resize-widget">📏 Resize</button>
+        <button class="change-widget">🔁 Change</button>
+      </div>
+    </div>
     <i class="bi bi-bar-chart-line widget-icon"></i>
     <div class="widget-title">Progress</div>
     <div class="widget-data">75%</div>
     <div class="widget-sub">Completed</div>
   </div>
 
-  <!-- DM -->
-  <div class="widget-box">
+  <!-- DMs -->
+  <div class="widget-box" data-type="messages">
+    <div class="widget-toolbar">
+      <button class="edit-widget-btn">⋮</button>
+      <div class="widget-menu">
+        <button class="delete-widget">🗑 Delete</button>
+        <button class="resize-widget">📏 Resize</button>
+        <button class="change-widget">🔁 Change</button>
+      </div>
+    </div>
     <i class="bi bi-chat-dots widget-icon"></i>
     <div class="widget-title">DMs</div>
     <div class="widget-data">2</div>
     <div class="widget-sub">New messages</div>
   </div>
+
+  <!-- Countdown -->
+  <div class="widget-box" data-type="countdown" data-size="small">
+    <div class="widget-toolbar">
+      <button class="edit-widget-btn">⋮</button>
+      <div class="widget-menu">
+        <button class="delete-widget">🗑 Delete</button>
+        <button class="resize-widget">📏 Resize</button>
+        <button class="change-widget">🔁 Change</button>
+      </div>
+    </div>
+    <i class="bi bi-hourglass-split widget-icon"></i>
+    <div class="widget-title">Next Deadline</div>
+    <div class="widget-data" id="countdown">--:--:--</div>
+    <div class="widget-sub">until submission</div>
+  </div>
+  <!-- 編集ボタン -->
+<div style="text-align: center; margin-top: 30px;">
+  <button id="edit-widgets-btn" class="btn-edit-widgets">ウィジェットを編集</button>
 </div>
+
+
+</div>
+
+<script>
+  const deadline = new Date();
+  deadline.setHours(deadline.getHours() + 2);
+
+  function updateCountdown() {
+    const now = new Date();
+    const diff = deadline - now;
+    if (diff <= 0) {
+      document.getElementById("countdown").innerText = "00:00:00";
+      return;
+    }
+    const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
+    const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+    const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+    document.getElementById("countdown").innerText = `${h}:${m}:${s}`;
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  document.querySelectorAll('.edit-widget-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const menu = btn.nextElementSibling;
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    });
+  });
+
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.widget-menu').forEach(menu => {
+      menu.style.display = 'none';
+    });
+  });
+
+  document.querySelectorAll('.delete-widget').forEach(delBtn => {
+    delBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const widget = delBtn.closest('.widget-box');
+      widget.remove();
+    });
+  });
+</script>
 
 {% endif %}
 {% endblock %}
