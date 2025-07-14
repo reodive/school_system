@@ -1,0 +1,68 @@
+/* ---- ToDo ウィジェット（表示用カード） ---- */
+.todo-widget {
+  background-color: #fffef8;
+  border: 2px solid #e8dfc8;
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  color: #3a3a3a;
+  width: 200px;
+}
+
+/* ToDoモーダル共通 */
+.todo-modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+}
+
+.todo-modal-content {
+  background: #fffef8;
+  width: 700px;
+  max-width: 95%;
+  height: 450px;
+  display: flex;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  overflow: hidden;
+}
+
+/* タブレット型UI：左右分割 */
+.todo-modal-left,
+.todo-modal-right {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.todo-modal-left {
+  border-right: 2px solid #f3e3b3;
+}
+
+/* リスト側の見た目 */
+.modal-todo-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 16px;
+}
+
+.modal-todo-list li {
+  padding: 10px;
+  font-size: 1rem;
+  background: #f9f5e9;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+/* 入力側の見た目 */
+#newTaskInput {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e8dfc8;
+  border-radius: 10px;
+  font-size: 1rem;
+}

@@ -4,11 +4,18 @@
 {% block title %}Home - SmartLearn{% endblock %}
 
 {% block content %}
+<script src="{% static 'widgets/todo/todo.js' %}"></script>
+<div class="widget-grid">
+  {% include "widgets/todo/todo_display.html" %}
+  <!-- 他のウィジェットも入るならここに -->
+</div>
 
 {% if request.session.display_mode == 'normal' %}
-  <!-- ノーマルモードの処理（省略） -->
+  <!-- ノーマルモードの処理 -->
 {% else %}
 <!-- ====================== シンプルモード ====================== -->
+
+<link rel="stylesheet" href="{% static 'widgets/todo/todo.css' %}">
 
 <style>
   .widget-grid {
@@ -53,18 +60,6 @@
     margin-bottom: 4px;
   }
 
-  .widget-data {
-    font-size: 1.4rem;
-    color: #222;
-    font-weight: bold;
-  }
-
-  .widget-sub {
-    font-size: 0.9rem;
-    color: #555;
-    margin-top: 4px;
-  }
-
   .widget-toolbar {
     position: absolute;
     top: 6px;
@@ -104,152 +99,110 @@
   .widget-menu button:hover {
     background-color: #f0f0f0;
   }
-  .btn-edit-widgets {
-  background-color: #f3e3b3;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: bold;
-  color: #4e3d2f;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
 
-.btn-edit-widgets:hover {
-  background-color: #e2c891;
-}
+  .edit-mode-btn {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #8d735f;
+    color: #fffef8;
+    border: none;
+    border-radius: 24px;
+    padding: 12px 24px;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    cursor: pointer;
+    z-index: 1000;
+  }
 
+  .widget-library {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 254, 248, 0.9);
+    backdrop-filter: blur(12px);
+    border-top: 2px solid #f3e3b3;
+    padding: 20px 30px;
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+    z-index: 999;
+    text-align: center;
+  }
+
+  .widget-library h4 {
+    margin-bottom: 16px;
+    font-weight: bold;
+  }
+
+  .widget-option {
+    display: inline-block;
+    margin: 8px;
+    padding: 12px 18px;
+    background: #f9f5e9;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    transition: transform 0.2s;
+  }
+
+  .widget-option:hover {
+    transform: scale(1.05);
+    background: #f0eadc;
+  }
 </style>
 
 <div class="widget-grid">
-
-  <!-- Today -->
-  <div class="widget-box" data-type="calendar" data-size="small">
-    <div class="widget-toolbar">
-      <button class="edit-widget-btn">⋮</button>
-      <div class="widget-menu">
-        <button class="delete-widget">🗑 Delete</button>
-        <button class="resize-widget">📏 Resize</button>
-        <button class="change-widget">🔁 Change</button>
-      </div>
-    </div>
-    <i class="bi bi-calendar widget-icon"></i>
-    <div class="widget-title">Today</div>
-    <div class="widget-data">{{ current_date|date:"Y/m/d" }}</div>
-    <div class="widget-sub">{{ current_date|date:"l" }}</div>
-  </div>
-
-  <!-- Tasks -->
-  <div class="widget-box" data-type="tasks">
-    <div class="widget-toolbar">
-      <button class="edit-widget-btn">⋮</button>
-      <div class="widget-menu">
-        <button class="delete-widget">🗑 Delete</button>
-        <button class="resize-widget">📏 Resize</button>
-        <button class="change-widget">🔁 Change</button>
-      </div>
-    </div>
-    <i class="bi bi-list-check widget-icon"></i>
-    <div class="widget-title">Tasks</div>
-    <div class="widget-data">3 due</div>
-    <div class="widget-sub">Latest tasks</div>
-  </div>
-
-  <!-- Progress -->
-  <div class="widget-box" data-type="progress">
-    <div class="widget-toolbar">
-      <button class="edit-widget-btn">⋮</button>
-      <div class="widget-menu">
-        <button class="delete-widget">🗑 Delete</button>
-        <button class="resize-widget">📏 Resize</button>
-        <button class="change-widget">🔁 Change</button>
-      </div>
-    </div>
-    <i class="bi bi-bar-chart-line widget-icon"></i>
-    <div class="widget-title">Progress</div>
-    <div class="widget-data">75%</div>
-    <div class="widget-sub">Completed</div>
-  </div>
-
-  <!-- DMs -->
-  <div class="widget-box" data-type="messages">
-    <div class="widget-toolbar">
-      <button class="edit-widget-btn">⋮</button>
-      <div class="widget-menu">
-        <button class="delete-widget">🗑 Delete</button>
-        <button class="resize-widget">📏 Resize</button>
-        <button class="change-widget">🔁 Change</button>
-      </div>
-    </div>
-    <i class="bi bi-chat-dots widget-icon"></i>
-    <div class="widget-title">DMs</div>
-    <div class="widget-data">2</div>
-    <div class="widget-sub">New messages</div>
-  </div>
-
-  <!-- Countdown -->
-  <div class="widget-box" data-type="countdown" data-size="small">
-    <div class="widget-toolbar">
-      <button class="edit-widget-btn">⋮</button>
-      <div class="widget-menu">
-        <button class="delete-widget">🗑 Delete</button>
-        <button class="resize-widget">📏 Resize</button>
-        <button class="change-widget">🔁 Change</button>
-      </div>
-    </div>
-    <i class="bi bi-hourglass-split widget-icon"></i>
-    <div class="widget-title">Next Deadline</div>
-    <div class="widget-data" id="countdown">--:--:--</div>
-    <div class="widget-sub">until submission</div>
-  </div>
-  <!-- 編集ボタン -->
-<div style="text-align: center; margin-top: 30px;">
-  <button id="edit-widgets-btn" class="btn-edit-widgets">ウィジェットを編集</button>
+  {% include "widgets/todo/widget.html" %}
 </div>
 
+<button id="editModeToggle" class="edit-mode-btn">ウィジェットを編集</button>
 
+<div id="widgetLibrary" class="widget-library">
+  <h4>追加できるウィジェット</h4>
+  <div class="widget-option">📅 カレンダー</div>
+  <div class="widget-option">✅ タスク</div>
+  <div class="widget-option">📊 進捗</div>
+  <div class="widget-option">💬 メッセージ</div>
 </div>
 
 <script>
-  const deadline = new Date();
-  deadline.setHours(deadline.getHours() + 2);
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.getElementById('editModeToggle');
+    const widgetLibrary = document.getElementById('widgetLibrary');
+    let editing = false;
 
-  function updateCountdown() {
-    const now = new Date();
-    const diff = deadline - now;
-    if (diff <= 0) {
-      document.getElementById("countdown").innerText = "00:00:00";
-      return;
-    }
-    const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
-    const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
-    const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
-    document.getElementById("countdown").innerText = `${h}:${m}:${s}`;
-  }
-
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
-
-  document.querySelectorAll('.edit-widget-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const menu = btn.nextElementSibling;
-      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    toggleBtn.addEventListener('click', () => {
+      editing = !editing;
+      widgetLibrary.style.display = editing ? 'block' : 'none';
+      toggleBtn.innerText = editing ? '完了' : 'ウィジェットを編集';
+      document.querySelectorAll('.widget-box').forEach(box => {
+        box.classList.toggle('editing', editing);
+      });
     });
-  });
 
-  document.addEventListener('click', () => {
-    document.querySelectorAll('.widget-menu').forEach(menu => {
-      menu.style.display = 'none';
+    document.querySelectorAll('.edit-widget-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const menu = btn.nextElementSibling;
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+      });
     });
-  });
 
-  document.querySelectorAll('.delete-widget').forEach(delBtn => {
-    delBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const widget = delBtn.closest('.widget-box');
-      widget.remove();
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.widget-menu').forEach(menu => {
+        menu.style.display = 'none';
+      });
+    });
+
+    document.querySelectorAll('.delete-widget').forEach(delBtn => {
+      delBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const widget = delBtn.closest('.widget-box');
+        widget.remove();
+      });
     });
   });
 </script>
