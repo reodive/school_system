@@ -7,7 +7,7 @@
 <script src="{% static 'widgets/todo/todo.js' %}"></script>
 <div class="widget-grid">
   {% include "widgets/todo/todo_display.html" %}
-  <!-- 他のウィジェットも入るならここに -->
+  {% include "widgets/todo/todo_modal.html" %}
 </div>
 
 {% if request.session.display_mode == 'normal' %}
