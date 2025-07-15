@@ -5,6 +5,7 @@
 
 {% block content %}
 <script src="{% static 'widgets/todo/todo.js' %}"></script>
+<link rel="stylesheet" href="{% static 'widgets/todo/todo.css' %}">
 <div class="widget-grid">
   {% include "widgets/todo/todo_display.html" %}
   {% include "widgets/todo/todo_modal.html" %}
@@ -13,9 +14,6 @@
 {% if request.session.display_mode == 'normal' %}
   <!-- ノーマルモードの処理 -->
 {% else %}
-<!-- ====================== シンプルモード ====================== -->
-
-<link rel="stylesheet" href="{% static 'widgets/todo/todo.css' %}">
 
 <style>
   .widget-grid {
