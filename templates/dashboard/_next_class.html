@@ -1,8 +1,22 @@
-<section class="card card--next">
-  <i class="bi bi-mortarboard next__icon"></i>
-  <div class="next__label">次の授業まで</div>
-  <div class="next__count">
-    <span class="next__num">{{ minutes_left }}</span>
-    <span class="next__unit">分</span>
+{# templates/dashboard/_next_class.html #}
+{% load static %}
+
+<div class="widget size-medium" data-widget-name="Next Class">
+  <!-- 通常表示 -->
+  <div class="widget-content">
+    <section class="card card--next next-widget">
+      <i class="bi bi-mortarboard next__icon"></i>
+      <div class="next__label">次の授業まで</div>
+      <div class="next__count">
+        <span class="next__num">{{ minutes_left }}</span>
+        <span class="next__unit">分</span>
+      </div>
+    </section>
   </div>
-</section>
+
+  <!-- 編集モードオーバーレイ -->
+  <div class="widget-edit-overlay">
+    <span class="widget-name">Next Class</span>
+    <button class="widget-delete" title="削除">🗑️</button>
+  </div>
+</div>

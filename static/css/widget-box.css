@@ -1,0 +1,86 @@
+/*----------------------------------------
+  ウィジェット共通デザイン（simple-mode含む）
+----------------------------------------*/
+
+/* ウィジェットエリア配置 */
+.widget-area {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  padding: 20px;
+}
+
+/* ウィジェット共通外観 */
+.widget-box {
+  background-color: #fffefc;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 15px;
+  text-align: center;
+  font-family: 'Noto Sans JP', sans-serif;
+  position: relative;
+  transition: transform 0.2s;
+  cursor: grab;
+}
+.widget-box:hover {
+  transform: translateY(-2px);
+}
+
+/* ウィジェットサイズ */
+.widget-size-small  { width: 160px; height: 130px; }
+.widget-size-medium { width: 240px; height: 160px; }
+.widget-size-large  { width: 400px; height: 200px; }
+
+/* 中身 */
+.widget-header {
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+.widget-body {
+  font-size: 0.9rem;
+  color: #333;
+}
+.widget-body span {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+/* 編集メニュー */
+.widget-toolbar {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+}
+.edit-widget-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.widget-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 25px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  z-index: 1000;
+}
+.widget-menu button {
+  display: block;
+  padding: 8px 12px;
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.widget-menu button:hover {
+  background-color: #f0f0f0;
+}

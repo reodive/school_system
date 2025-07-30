@@ -1,0 +1,31 @@
+{# templates/dashboard/_custom_image.html #}
+{% load static %}
+
+<div class="widget size-medium" data-widget-name="Image">
+  <!-- 通常表示 -->
+  <div class="widget-content">
+    <section class="card custom-image-widget">
+      <h2 class="custom-image__title">マイ画像</h2>
+      <input type="file" accept="image/*" class="custom-image__input">
+      {% if image_url %}
+        <img
+          src="{{ image_url }}"
+          class="custom-image__preview"
+          alt="アップロードされた画像"
+        >
+      {% else %}
+        <img
+          src="{% static 'images/placeholder.png' %}"
+          class="custom-image__preview"
+          alt="画像のプレースホルダー"
+        >
+      {% endif %}
+    </section>
+  </div>
+
+  <!-- 編集モードオーバーレイ -->
+  <div class="widget-edit-overlay">
+    <span class="widget-name">Image</span>
+    <button class="widget-delete" title="削除">🗑️</button>
+  </div>
+</div>

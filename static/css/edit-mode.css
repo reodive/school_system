@@ -1,0 +1,18 @@
+.widget-box.editing .widget-content {
+  display: none;
+}
+.widget-box.editing .widget-edit-overlay {
+  display: flex;
+}
+
+.widget-edit-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(255,255,255,0.85);
+  backdrop-filter: blur(4px);
+  border-radius: var(--radius);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

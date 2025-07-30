@@ -1,0 +1,23 @@
+{# templates/dashboard/_notes.html #}
+{% load static %}
+
+<div class="widget size-medium" data-widget-name="Notes">
+  <!-- 通常表示 -->
+  <div class="widget-content">
+    <section class="card card--notes notes-widget">
+      <h2 class="notes__title">メモ</h2>
+      <textarea
+        class="notes__area"
+        rows="6"
+        placeholder="ここにメモ…"
+      >{{ notes_text }}</textarea>
+      <button class="notes__save-btn">保存</button>
+    </section>
+  </div>
+
+  <!-- 編集モードオーバーレイ -->
+  <div class="widget-edit-overlay">
+    <span class="widget-name">Notes</span>
+    <button class="widget-delete" title="削除">🗑️</button>
+  </div>
+</div>

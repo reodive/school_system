@@ -1,4 +1,18 @@
-<section class="card card--timer">
-  <i class="bi bi-hourglass-split timer__icon"></i>
-  <div class="timer__time">{{ now|time:"H:i" }}</div>
-</section>
+{# templates/dashboard/_timer.html #}
+{% load static %}
+
+<div class="widget size-small" data-widget-name="Timer">
+  <!-- 通常表示 -->
+  <div class="widget-content">
+    <section class="card card--timer timer-widget">
+      <i class="bi bi-hourglass-split timer__icon"></i>
+      <div class="timer__time">{{ hour }}:{{ minute }}</div>
+    </section>
+  </div>
+
+  <!-- 編集モードオーバーレイ -->
+  <div class="widget-edit-overlay">
+    <span class="widget-name">Timer</span>
+    <button class="widget-delete" title="削除">🗑️</button>
+  </div>
+</div>

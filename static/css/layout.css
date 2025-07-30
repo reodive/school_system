@@ -1,0 +1,27 @@
+/* ────────────── ウィジェットサイズ ────────────── */
+.widget.size-small  { width: 200px !important; aspect-ratio: 1 / 1 !important; }
+.widget.size-medium { width: 260px !important; aspect-ratio: 3 / 4 !important; }
+.widget.size-large  { width: 320px !important; aspect-ratio: 4 / 3 !important; }
+
+/* ────────────── ダッシュボード全体 ────────────── */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(180px, auto);
+  gap: 16px;
+  padding: 20px;
+}
+
+/* ウィジェット共通 */
+.dashboard-grid > div {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  font-size: 14px;
+}
+
+/* ────────────── コンテンツ表示 ────────────── */
+.widget, .widget-box { outline: none !important; }
+.widget-content { width: 100%; height: 100%; }

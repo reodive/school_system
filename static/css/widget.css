@@ -1,0 +1,11 @@
+.widget {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  transition: 0.3s ease;
+}

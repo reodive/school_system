@@ -1,0 +1,19 @@
+{# templates/dashboard/_messages.html #}
+{% load static %}
+
+<div class="widget size-medium" data-widget-name="Messages">
+  <!-- 通常表示 -->
+  <div class="widget-content">
+    <section class="card card--messages messages-widget">
+      <i class="bi bi-chat-dots messages__icon"></i>
+      <div class="messages__count">{{ unread_count }}</div>
+      <div class="messages__label">新着メッセージ</div>
+    </section>
+  </div>
+
+  <!-- 編集モードオーバーレイ -->
+  <div class="widget-edit-overlay">
+    <span class="widget-name">Messages</span>
+    <button class="widget-delete" title="削除">🗑️</button>
+  </div>
+</div>

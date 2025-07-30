@@ -1,0 +1,48 @@
+/*----------------------------------------
+  白 × ベージュ 洗練テーマ for simple-mode
+----------------------------------------*/
+
+body.simple-mode {
+  background-color: #fdfdfd;
+  font-family: 'Noto Sans JP', 'Helvetica Neue', sans-serif;
+  color: #333;
+}
+
+/* AIアシスタント（※現在非表示だがテーマ残す） */
+body.simple-mode .ai-assistant img {
+  border: 3px solid #8b7e74;
+}
+body.simple-mode .ai-assistant button {
+  background-color: #8b7e74;
+  color: #fff;
+}
+body.simple-mode .ai-assistant button:hover {
+  background-color: #6f655d;
+}
+
+/* 情報ボックス */
+body.simple-mode .info-box {
+  background-color: #f5f1ec !important;
+  border: 1px solid #e0ddd8 !important;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  color: #333;
+  transition: transform 0.2s ease;
+}
+body.simple-mode .info-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+body.simple-mode .info-box h5 {
+  color: #8b7e74;
+  letter-spacing: 1px;
+}
+
+/* フッター */
+body.simple-mode footer {
+  background-color: #f0ebe7;
+  color: #8b7e74;
+  border-top: 1px solid #dcd7d0;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 0.9rem;
+}

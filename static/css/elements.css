@@ -1,0 +1,31 @@
+/* ────────────── ボタン / アイコン / テキスト ────────────── */
+
+/* メモ保存ボタン */
+.notes__save-btn {
+  background: var(--sage) !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+/* アイコン統一 */
+.widget-box i[class*="bi-"] {
+  font-size: 1.5rem !important;
+  margin-bottom: 8px !important;
+  display: block !important;
+  text-align: center !important;
+}
+
+/* ボタン初期化 */
+button {
+  appearance: none !important;
+  background: none !important;
+  border: none !important;
+}
+
+/* ────────────── 日付・タイマー文字サイズ ────────────── */
+.date__month, .timer__time {
+  font-size: var(--fs-lg) !important;
+}
+.date__day {
+  font-size: var(--fs-xxl) !important;
+}

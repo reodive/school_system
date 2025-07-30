@@ -1,15 +1,32 @@
-<section class="card card--todo" aria-label="todo">
-  <h2 class="todo__title">ToDo</h2>
-  <ul class="todo__list">
-    {% for t in tasks %}
-      <li class="todo__item{% if t.done %} completed{% endif %}" data-task-id="{{ t.pk }}">
-        <label>
-          <input type="checkbox" {% if t.done %}checked{% endif %}>
-          {{ t.title }}
-        </label>
-      </li>
-    {% empty %}
-      <li class="todo__item">（タスクなし）</li>
-    {% endfor %}
-  </ul>
-</section>
+{# templates/dashboard/_todo.html #}
+{% load static %}
+
+<div class="widget size-medium" data-widget-name="ToDo">
+  <!-- 通常表示 -->
+  <div class="widget-content">
+    <section class="card card--todo todo-widget">
+      <h2 class="todo__title">ToDo</h2>
+      <ul class="todo__list">
+        {% for t in task %}
+          <li
+            class="todo__item{% if t.done %} completed{% endif %}"
+            data-task-id="{{ t.pk }}"
+          >
+            <label>
+              <input type="checkbox" {% if t.done %}checked{% endif %}>
+              {{ t.title }}
+            </label>
+          </li>
+        {% empty %}
+          <li class="todo__item">(タスクなし)</li>
+        {% endfor %}
+      </ul>
+    </section>
+  </div>
+
+  <!-- 編集モードオーバーレイ -->
+  <div class="widget-edit-overlay">
+    <span class="widget-name">ToDo</span>
+    <button class="widget-delete" title="削除">🗑️</button>
+  </div>
+</div>

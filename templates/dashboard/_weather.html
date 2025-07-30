@@ -1,10 +1,26 @@
-<section class="card card--weather weather-widget">
-  <div class="weather__icon-group">
-    <!-- 太陽アイコン -->
-    <i class="bi bi-sun-fill weather__sun-icon"></i>
-    <!-- 雲アイコン -->
-    <i class="bi bi-cloud-fill weather__cloud-icon"></i>
+{# templates/dashboard/_weather.html #}
+{% load static %}
+
+<div class="widget size-medium" data-widget-name="Weather">
+  <!-- 通常表示 -->
+  <div class="widget-content">
+    <section class="card card--weather weather-widget">
+      <!-- アイコン群 -->
+      <div class="weather__icon-group">
+        <i class="bi bi-sun-fill weather__sun-icon"></i>
+        <i class="bi bi-cloud-fill weather__cloud-icon"></i>
+      </div>
+      <!-- 都市名 と 気温 をまとめて表示 -->
+      <div class="weather__data">
+        <div class="weather__city">{{ weather.city }}</div>
+        <div class="weather__temp">{{ weather.temp }}&deg;</div>
+      </div>
+    </section>
   </div>
-  <div class="weather__city">{{ weather.city }}</div>
-  <div class="weather__temp">{{ weather.temp }}&deg;</div>
-</section>
+
+  <!-- 編集モードオーバーレイ -->
+  <div class="widget-edit-overlay">
+    <span class="widget-name">Weather</span>
+    <button class="widget-delete" title="削除">🗑️</button>
+  </div>
+</div>

@@ -4,12 +4,10 @@
 {% block title %}Home - SmartLearn{% endblock %}
 
 {% block extra_head %}
-  <!-- ── ここにダッシュボード用CSSを読み込む -->
   <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 {% endblock %}
 
 {% block content %}
-  <!-- ── ここがメインコンテンツ。ダッシュボードグリッドを置く -->
   <div class="dashboard-grid">
     {% include "dashboard/_date.html" %}
     {% include "dashboard/_timer.html" %}
@@ -17,199 +15,14 @@
     {% include "dashboard/_next_class.html" %}
     {% include "dashboard/_weather.html" %}
     {% include "dashboard/_todo.html" %}
+    {% include "dashboard/_notes.html" %}
+    {% include "dashboard/_messages.html" %}
+    {% include "dashboard/_custom_image.html" %}
   </div>
+  <!-- 編集モード切替ボタン -->
+  <button id="editModeToggle" class="edit-mode-btn">ウィジェットを編集</button>
 {% endblock %}
 
 {% block extra_js %}
-  <!-- ── ここにダッシュボード用JSを読み込む -->
   <script src="{% static 'js/dashboard.js' %}"></script>
-{% endblock %}
-
-<style>
-  .widget-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-    justify-content: center;
-    margin-top: 30px;
-  }
-
-  .widget-box {
-    width: 180px;
-    height: 180px;
-    background: #fffef8;
-    border: 3px solid #bdb76b;
-    border-radius: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    position: relative;
-  }
-
-  .widget-box:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 14px rgba(0,0,0,0.1);
-  }
-
-  .widget-icon {
-    font-size: 2rem;
-    color: #8d735f;
-    margin-bottom: 6px;
-  }
-
-  .widget-title {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #3c3c3c;
-    margin-bottom: 4px;
-  }
-
-  .widget-toolbar {
-    position: absolute;
-    top: 6px;
-    right: 8px;
-  }
-
-  .edit-widget-btn {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-  }
-
-  .widget-menu {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 25px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    z-index: 10;
-  }
-
-  .widget-menu button {
-    display: block;
-    padding: 8px 12px;
-    width: 100%;
-    background: none;
-    border: none;
-    text-align: left;
-    cursor: pointer;
-    font-size: 0.85rem;
-  }
-
-  .widget-menu button:hover {
-    background-color: #f0f0f0;
-  }
-
-  .edit-mode-btn {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #8d735f;
-    color: #fffef8;
-    border: none;
-    border-radius: 24px;
-    padding: 12px 24px;
-    font-weight: bold;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    cursor: pointer;
-    z-index: 1000;
-  }
-
-  .widget-library {
-    display: none;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(255, 254, 248, 0.9);
-    backdrop-filter: blur(12px);
-    border-top: 4px solid 	#a7988a;
-    padding: 20px 30px;
-    box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
-    z-index: 999;
-    text-align: center;
-  }
-
-  .widget-library h4 {
-    margin-bottom: 16px;
-    font-weight: bold;
-  }
-
-  .widget-option {
-    display: inline-block;
-    margin: 8px;
-    padding: 12px 18px;
-    background: #f9f5e9;
-    border-radius: 12px;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-    transition: transform 0.2s;
-  }
-
-  .widget-option:hover {
-    transform: scale(1.05);
-    background: #f0eadc;
-  }
-</style>
-
-<button id="editModeToggle" class="edit-mode-btn">ウィジェットを編集</button>
-
-<div id="widgetLibrary" class="widget-library">
-  <h4>追加できるウィジェット</h4>
-  <div class="widget-option">📅 カレンダー</div>
-  <div class="widget-option">✅ タスク</div>
-  <div class="widget-option">📊 進捗</div>
-  <div class="widget-option">💬 メッセージ</div>
-</div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const toggleBtn = document.getElementById('editModeToggle');
-    const widgetLibrary = document.getElementById('widgetLibrary');
-    let editing = false;
-
-    toggleBtn.addEventListener('click', () => {
-      editing = !editing;
-      widgetLibrary.style.display = editing ? 'block' : 'none';
-      toggleBtn.innerText = editing ? '完了' : 'ウィジェットを編集';
-      document.querySelectorAll('.widget-box').forEach(box => {
-        box.classList.toggle('editing', editing);
-      });
-    });
-
-    document.querySelectorAll('.edit-widget-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const menu = btn.nextElementSibling;
-        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-      });
-    });
-
-    document.addEventListener('click', () => {
-      document.querySelectorAll('.widget-menu').forEach(menu => {
-        menu.style.display = 'none';
-      });
-    });
-
-    document.querySelectorAll('.delete-widget').forEach(delBtn => {
-      delBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const widget = delBtn.closest('.widget-box');
-        widget.remove();
-      });
-    });
-  });
-</script>
-
-{% endif %}
 {% endblock %}

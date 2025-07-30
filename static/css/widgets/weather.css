@@ -1,0 +1,15 @@
+.card--weather {
+  grid-area: weather;
+  gap: 12px;
+  text-align: center;
+}
+
+.card--weather .temperature {
+  font-size: 2.2rem;
+  color: #4a392d;
+}
+
+.card--weather .city {
+  font-size: 1.1rem;
+  color: #6e4e2c;
+}

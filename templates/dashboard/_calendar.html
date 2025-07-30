@@ -1,15 +1,37 @@
-<section class="card card--calendar">
-  <h5 class="cal__title">{{ today|date:"n月" }}</h5>
-  <div class="cal__grid">
-    {# 曜日ヘッダー #}
-    {% for wd in "SMTWTFS" %}
-      <div class="cal__wk">{{ wd }}</div>
-    {% endfor %}
-    {# 日付ボタン #}
-    {% for day in days_in_month %}
-      <button class="cal__d{% if day == today|date:'j' %} today{% endif %}">
-        {{ day }}
-      </button>
-    {% endfor %}
+{# templates/dashboard/_calendar.html #}
+{% load static %}
+
+<div class="widget size-medium" data-widget-name="Calendar">
+  <!-- 通常表示 -->
+  <div class="widget-content">
+    <section class="card card-calendar calendar-widget">
+      <h5 class="cal__title">{% now "F" %}</h5>
+
+      <!-- 曜日行 -->
+      <div class="cal__wk-row">
+        <div class="cal__wk">S</div>
+        <div class="cal__wk">M</div>
+        <div class="cal__wk">T</div>
+        <div class="cal__wk">W</div>
+        <div class="cal__wk">T</div>
+        <div class="cal__wk">F</div>
+        <div class="cal__wk">S</div>
+      </div>
+
+      <!-- 日付グリッド -->
+      <div class="cal__grid">
+        {% for day in days_in_month %}
+          <button class="cal__d{% if day == today|date:'j' %} today{% endif %}">
+            {{ day }}
+          </button>
+        {% endfor %}
+      </div>
+    </section>
   </div>
-</section>
+
+  <!-- 編集モードオーバーレイ -->
+  <div class="widget-edit-overlay">
+    <span class="widget-name">Calendar</span>
+    <button class="widget-delete" title="削除">🗑️</button>
+  </div>
+</div>

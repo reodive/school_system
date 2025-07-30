@@ -1,10 +1,20 @@
-<section class="card card--date widget size-medium" data-widget="date">
-  <div class="widget-toolbar">
-    <button data-size="small">S</button>
-    <button data-size="medium" class="active">M</button>
-    <button data-size="large">L</button>
+{# templates/dashboard/_date.html #}
+{% load static %}
+
+<div class="widget size-medium" data-widget-name="Date">
+  <!-- 通常表示 -->
+  <div class="widget-content">
+    <section class="card card--date date-widget">
+      <!-- 月 -->
+      <div class="date__month">{% now "n月" %}</div>
+      <!-- 日 -->
+      <div class="date__day">{% now "j" %}</div>
+    </section>
   </div>
-  <!-- 既存コンテンツ -->
-  <div class="date__month">{{ today|date:"n月" }}</div>
-  <div class="date__day">{{ today|date:"j" }}</div>
-</section>
+
+  <!-- 編集モードオーバーレイ -->
+  <div class="widget-edit-overlay">
+    <span class="widget-name">Date</span>
+    <button class="widget-delete" title="削除">🗑️</button>
+  </div>
+</div>
