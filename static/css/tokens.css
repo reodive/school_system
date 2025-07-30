@@ -1,0 +1,83 @@
+:root {
+  /* ■ カラーパレット */
+  --bg: #F7F5F1;
+  --surface: #FFFFFF;
+  --ink: #1a2d4f;
+  --muted: #8B8F93;
+
+  --pink: #DDB3BB;
+  --teal: #7FA9AE;
+  --sage: #93A689;
+
+  /* ■ タイポグラフィ */
+  --font-sans: 'Noto Sans JP','Inter', system-ui, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+
+  /* ■ サイズ & ラディウス & シャドウ */
+  --radius: 24px;
+  --shadow: 0 8px 24px rgba(0,0,0,0.06);
+
+  /* ■ フォントサイズ */
+  --fs-xxl: 96px;
+  --fs-xl: 40px;
+  --fs-lg: 28px;
+  --fs-md: 18px;
+  --fs-sm: 14px;
+  --sun-color: #d0c16d;
+  --cloud-color: #ffffff;
+}
+
+/*── 共通変数追加 ─────────────────────────────────*/
+:root {
+  /* ネイビーカラーを追加 */
+  --navy: #28323A;     /* 紺色 */
+}
+
+/*── Date & Timer ウィジェット共通 ───────────────────*/
+.date-widget,
+.timer-widget {
+  /* 中央揃え */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  text-align: center;
+  color: var(--navy);                  /* 文字色を紺に */
+  font-family: var(--font-serif);      /* 日付はセリフ寄りでおしゃれに */
+}
+
+/*── Date ウィジェット ─────────────────────────────*/
+.date-widget {
+  grid-area: date;                     /* グリッド配置エリア */
+  background: var(--pink);             /* ピンク背景 */
+}
+.date-widget .date__month {
+  font-size: var(--fs-lg);
+  margin-bottom: 4px;
+}
+.date-widget .date__day {
+  font-size: var(--fs-xxl);
+  line-height: 1;
+}
+
+/*── Timer ウィジェット ────────────────────────────*/
+.timer-widget {
+  grid-area: timer;                    /* グリッド配置エリア */
+  background: var(--surface);
+  padding: 16px;
+}
+.timer-widget .icon {
+  font-size: 3rem;                     /* アイコンを大きく */
+  color: var(--navy);                  /* 紺色に */
+  margin-bottom: 8px;
+}
+.timer-widget .timer__time {
+  font-family: var(--font-serif);
+  font-size: var(--fs-lg);
+  color: var(--navy);
+}

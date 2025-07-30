@@ -2,9 +2,10 @@ import logging
 import datetime
 from datetime import timedelta
 from datetime import datetime
+import calendar
 
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
@@ -17,6 +18,7 @@ from rest_framework.response import Response
 
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
+from django.views.decorators.http import require_POST
 
 from .models import Task, Announcement, Submission, Group
 from .forms import TaskForm, AnnouncementForm, TaskSubmissionForm
@@ -39,8 +41,6 @@ def group_detail(request, group_id):
         'announcements': announcements,
     })
 
-from django.shortcuts import render
-
 def timer_view(request):
     return render(request, 'tasks/timer.html')
 
@@ -52,13 +52,39 @@ SCOPES = ["https://www.googleapis.com/auth/calendar"]
 SERVICE_ACCOUNT_FILE = "credentials.json"
 
 def home(request):
-    request.session['display_mode'] = 'simple'  # ← ここが肝心。テンプレートが参照しているのはセッション変数
+    # ■ 日付・時刻情報
+    now = datetime.now()
+    today = now.date()
+
+    # ■ カレンダー用：今月の日にちリスト
+    last_day = calendar.monthrange(today.year, today.month)[1]
+    days_in_month = list(range(1, last_day + 1))
+
+    # ■ Next Class 用：次の授業開始時刻との差分（分単位）
+    minutes_left = 5  # 実装に合わせて動的に取得してください
+
+    # ■ 天気情報（仮置き。API連携があれば読み替え）
+    weather = {
+        'city': 'Tokyo',
+        'temp': 24,
+    }
+
+    # ■ ToDo リスト：担当ユーザーで絞り込み、締切日でソート
+    tasks = (
+        Task.objects
+            .filter(assigned_to=request.user)
+            .order_by('deadline')   # ← ここを 'id' や 'priority' に変えてもOK
+    )
+
     context = {
-        'current_date': datetime.now(),
+        'now': now,
+        'today': today,
+        'days_in_month': days_in_month,
+        'minutes_left': minutes_left,
+        'weather': weather,
+        'tasks': tasks,
     }
     return render(request, 'home.html', context)
-
-from django.http import JsonResponse
 
 def progress_api(request):
     # 例: ユーザーの完了済みタスク数と総タスク数を取得
@@ -312,3 +338,15 @@ def tasks_by_subject(request):
         'tasks_by_subject': tasks_by_subject,
     }
     return render(request, 'tasks/tasks_by_subject.html', context)
+
+@require_POST
+def toggle_task(request, pk):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+    try:
+        task = Task.objects.get(pk=pk, user=request.user)
+    except Task.DoesNotExist:
+        raise Http404
+    task.done = not task.done
+    task.save()
+    return JsonResponse({'pk': pk, 'done': task.done})

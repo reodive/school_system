@@ -3,17 +3,27 @@
 
 {% block title %}Home - SmartLearn{% endblock %}
 
-{% block content %}
-<script src="{% static 'widgets/todo/todo.js' %}"></script>
-<link rel="stylesheet" href="{% static 'widgets/todo/todo.css' %}">
-<div class="widget-grid">
-  {% include "widgets/todo/todo_display.html" %}
-  {% include "widgets/todo/todo_modal.html" %}
-</div>
+{% block extra_head %}
+  <!-- ── ここにダッシュボード用CSSを読み込む -->
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
 
-{% if request.session.display_mode == 'normal' %}
-  <!-- ノーマルモードの処理 -->
-{% else %}
+{% block content %}
+  <!-- ── ここがメインコンテンツ。ダッシュボードグリッドを置く -->
+  <div class="dashboard-grid">
+    {% include "dashboard/_date.html" %}
+    {% include "dashboard/_timer.html" %}
+    {% include "dashboard/_calendar.html" %}
+    {% include "dashboard/_next_class.html" %}
+    {% include "dashboard/_weather.html" %}
+    {% include "dashboard/_todo.html" %}
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  <!-- ── ここにダッシュボード用JSを読み込む -->
+  <script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}
 
 <style>
   .widget-grid {
@@ -28,7 +38,7 @@
     width: 180px;
     height: 180px;
     background: #fffef8;
-    border: 2px solid #f3e3b3;
+    border: 3px solid #bdb76b;
     border-radius: 20px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.06);
     padding: 16px;
@@ -122,7 +132,7 @@
     right: 0;
     background: rgba(255, 254, 248, 0.9);
     backdrop-filter: blur(12px);
-    border-top: 2px solid #f3e3b3;
+    border-top: 4px solid 	#a7988a;
     padding: 20px 30px;
     box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
     z-index: 999;
@@ -151,10 +161,6 @@
     background: #f0eadc;
   }
 </style>
-
-<div class="widget-grid">
-  {% include "widgets/todo/widget.html" %}
-</div>
 
 <button id="editModeToggle" class="edit-mode-btn">ウィジェットを編集</button>
 

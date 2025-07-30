@@ -9,6 +9,7 @@ urlpatterns = [
     path("tasks/", login_required(task_list), name="task_list"),
     # ホームページ
     path("", home, name="home"),
+    path('', views.home, name='home'),
 
     # 課題関連
     path("tasks/", views.task_list, name="task_list"),
@@ -38,5 +39,6 @@ urlpatterns = [
     path('timer/', views.timer_view, name='timer_view'),
     # urls.py
     path('api/progress/', progress_api, name='progress_api'),
+    path('tasks/<int:pk>/toggle/', views.toggle_task, name='toggle_task'),
 
 ]

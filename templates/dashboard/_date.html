@@ -1,0 +1,10 @@
+<section class="card card--date widget size-medium" data-widget="date">
+  <div class="widget-toolbar">
+    <button data-size="small">S</button>
+    <button data-size="medium" class="active">M</button>
+    <button data-size="large">L</button>
+  </div>
+  <!-- 既存コンテンツ -->
+  <div class="date__month">{{ today|date:"n月" }}</div>
+  <div class="date__day">{{ today|date:"j" }}</div>
+</section>

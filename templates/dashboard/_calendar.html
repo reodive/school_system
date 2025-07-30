@@ -1,0 +1,15 @@
+<section class="card card--calendar">
+  <h5 class="cal__title">{{ today|date:"n月" }}</h5>
+  <div class="cal__grid">
+    {# 曜日ヘッダー #}
+    {% for wd in "SMTWTFS" %}
+      <div class="cal__wk">{{ wd }}</div>
+    {% endfor %}
+    {# 日付ボタン #}
+    {% for day in days_in_month %}
+      <button class="cal__d{% if day == today|date:'j' %} today{% endif %}">
+        {{ day }}
+      </button>
+    {% endfor %}
+  </div>
+</section>

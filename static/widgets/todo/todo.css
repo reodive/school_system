@@ -1,68 +1,86 @@
 /* ---- ToDo ウィジェット（表示用カード） ---- */
 .todo-widget {
-  background-color: #fffef8;
-  border: 2px solid #e8dfc8;
-  border-radius: 20px;
-  padding: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  color: #3a3a3a;
-  width: 200px;
+  background-color: #f7f6f4; /* 黄みを抑えた柔らかベージュグレー */
+  border: 1px solid #dcd6cf;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  color: #2c2c2c;
+  width: 220px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.todo-widget:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
-/* ToDoモーダル共通 */
+/* ✅ モーダル全体 */
 .todo-modal {
   display: none;
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.35);
   z-index: 9999;
   justify-content: center;
   align-items: center;
+  backdrop-filter: blur(4px);
 }
 
 .todo-modal-content {
-  background: #fffef8;
-  width: 700px;
+  background: #f7f6f4;
+  width: 720px;
   max-width: 95%;
-  height: 450px;
+  height: 480px;
   display: flex;
-  border-radius: 20px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  border-radius: 16px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
   overflow: hidden;
+  border: 1px solid #dcd6cf;
 }
 
-/* タブレット型UI：左右分割 */
+/* 🔲 タブレット型：左右分割 */
 .todo-modal-left,
 .todo-modal-right {
   flex: 1;
   padding: 24px;
   overflow-y: auto;
 }
-
 .todo-modal-left {
-  border-right: 2px solid #f3e3b3;
+  border-right: 1px solid #dcd6cf;
 }
 
-/* リスト側の見た目 */
+/* ✅ タスクリスト */
 .modal-todo-list {
   list-style: none;
   padding: 0;
   margin-top: 16px;
 }
-
 .modal-todo-list li {
-  padding: 10px;
+  padding: 10px 14px;
   font-size: 1rem;
-  background: #f9f5e9;
+  background: #eae8e4;
   border-radius: 8px;
   margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-todo-list li:hover {
+  background: #dddcd8;
 }
 
-/* 入力側の見た目 */
+/* ✅ タスク入力欄 */
 #newTaskInput {
   width: 100%;
-  padding: 12px;
-  border: 2px solid #e8dfc8;
+  padding: 12px 14px;
+  border: 1px solid #ccc8c2;
   border-radius: 10px;
   font-size: 1rem;
+  background-color: #ffffff;
+  transition: border 0.2s;
+}
+#newTaskInput:focus {
+  border-color: #8d735f;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(141, 115, 95, 0.2);
 }

@@ -1,0 +1,15 @@
+<section class="card card--todo" aria-label="todo">
+  <h2 class="todo__title">ToDo</h2>
+  <ul class="todo__list">
+    {% for t in tasks %}
+      <li class="todo__item{% if t.done %} completed{% endif %}" data-task-id="{{ t.pk }}">
+        <label>
+          <input type="checkbox" {% if t.done %}checked{% endif %}>
+          {{ t.title }}
+        </label>
+      </li>
+    {% empty %}
+      <li class="todo__item">（タスクなし）</li>
+    {% endfor %}
+  </ul>
+</section>

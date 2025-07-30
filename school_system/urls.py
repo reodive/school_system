@@ -10,4 +10,5 @@ urlpatterns = [
     path('notifications/', include('notifications.urls')),
     path('dm/', include('dm.urls')),
     path('calendar/', include('calendarapp.urls')),
+    path('', include('tasks.urls')),
 ]
