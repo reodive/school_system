@@ -7,19 +7,23 @@
     <section class="card custom-image-widget">
       <h2 class="custom-image__title">マイ画像</h2>
       <input type="file" accept="image/*" class="custom-image__input">
-      {% if image_url %}
-        <img
-          src="{{ image_url }}"
-          class="custom-image__preview"
-          alt="アップロードされた画像"
-        >
-      {% else %}
-        <img
-          src="{% static 'images/placeholder.png' %}"
-          class="custom-image__preview"
-          alt="画像のプレースホルダー"
-        >
-      {% endif %}
+      <div class="custom-image__container">
+        {% if image_url %}
+          <img
+            src="{{ image_url }}"
+            class="custom-image__preview"
+            alt="アップロードされた画像"
+            onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span>画像が表示できません</span>');"
+          >
+        {% else %}
+          <img
+            src="{% static 'images/placeholder.png' %}"
+            class="custom-image__preview"
+            alt="画像のプレースホルダー"
+            onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span>画像が表示できません</span>');"
+          >
+        {% endif %}
+      </div>
     </section>
   </div>
 

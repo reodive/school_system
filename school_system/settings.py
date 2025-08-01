@@ -1,5 +1,12 @@
-import os
 from pathlib import Path
+import dotenv
+import os
+
+# .env.local を優先的に読み込み、それがなければ .env
+BASE_DIR = Path(__file__).resolve().parent.parent
+dotenv_file = BASE_DIR / ".env.local" if (BASE_DIR / ".env.local").exists() else BASE_DIR / ".env"
+dotenv.load_dotenv(dotenv_file)
+
 from dotenv import load_dotenv
 
 # ===== プロジェクトのルートディレクトリを取得 =====
@@ -162,3 +169,8 @@ GOOGLE_CALENDAR_ID = 'your_calendar_id@group.calendar.google.com'
 LOGOUT_REDIRECT_URL = '/users/login/'
 
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'your_default_api_key')
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass
