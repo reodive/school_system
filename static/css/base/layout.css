@@ -2,6 +2,22 @@
 .widget.size-small  { width: 200px !important; aspect-ratio: 1 / 1 !important; }
 .widget.size-medium { width: 260px !important; aspect-ratio: 3 / 4 !important; }
 .widget.size-large  { width: 320px !important; aspect-ratio: 4 / 3 !important; }
+.widget .title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.widget .value {
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.todo-widget ul li {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
 
 /* ────────────── ダッシュボード全体 ────────────── */
 .dashboard-grid {

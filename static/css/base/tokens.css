@@ -1,0 +1,30 @@
+:root {
+  /* ■ カラーパレット */
+  --bg: #F7F5F1;
+  --surface: #FFFFFF;
+  --ink: #1a2d4f;
+  --muted: #8B8F93;
+
+  --pink: #DDB3BB;
+  --teal: #7FA9AE;
+  --sage: #93A689;
+  --sun-color: #d0c16d;
+  --cloud-color: #ffffff;
+
+  --navy: #28323A;
+
+  /* ■ タイポグラフィ */
+  --font-sans: 'Noto Sans JP','Inter', system-ui, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+
+  /* ■ サイズ & シャドウ */
+  --radius: 24px;
+  --shadow: 0 8px 24px rgba(0,0,0,0.06);
+
+  /* ■ フォントサイズ */
+  --fs-xxl: 96px;
+  --fs-xl: 40px;
+  --fs-lg: 28px;
+  --fs-md: 18px;
+  --fs-sm: 14px;
+}

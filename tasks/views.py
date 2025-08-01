@@ -70,7 +70,7 @@ def home(request):
     }
 
     # ■ ToDo リスト：担当ユーザーで絞り込み、締切日でソート
-    tasks = (
+    task = (
         Task.objects
             .filter(assigned_to=request.user)
             .order_by('deadline')   # ← ここを 'id' や 'priority' に変えてもOK
@@ -82,7 +82,7 @@ def home(request):
         'days_in_month': days_in_month,
         'minutes_left': minutes_left,
         'weather': weather,
-        'tasks': tasks,
+        'task': task,  # ← ココを 'tasks' → 'task' に変更
     }
     return render(request, 'home.html', context)
 

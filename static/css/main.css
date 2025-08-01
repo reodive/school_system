@@ -1,0 +1,19 @@
+@import url("base/tokens.css");
+@import url("base/base.css");
+@import url("base/layout.css");
+
+@import url("structure/elements.css");
+@import url("structure/components.css");
+
+@import url("components/widget-box.css");
+
+@import url("modes/edit-mode.css");
+@import url("modes/simple-mode.css");
+
+@import url("widgets/calendar.css");
+@import url("widgets/date.css");
+@import url("widgets/timer.css");
+@import url("widgets/todo.css");
+@import url("widgets/weather.css");
+@import url("widgets/next.css");
+@import url("widgets/custom_image.css");
